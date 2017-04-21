@@ -9,7 +9,7 @@ Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Microsoft.Xbox.Services.Sha
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Xbox.Services.UWP.CSharp", "..\..\..\..\Source\Microsoft.Xbox.Services.UWP.CSharp\Microsoft.Xbox.Services.UWP.CSharp.csproj", "{CFB2CA8F-6611-4DCA-981C-4B7AFCCA19A8}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Microsoft.Xbox.Services.WinRT", "..\..\..\..\Source\Microsoft.Xbox.Services.WinRT\Microsoft.Xbox.Services.WinRT.vcxproj", "{4CBE0F45-8441-48F8-873C-7822FD059C07}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Microsoft.Xbox.Services.WinRT.Interop", "..\..\..\..\Source\Microsoft.Xbox.Services.WinRT.Interop\Microsoft.Xbox.Services.WinRT.Interop.vcxproj", "{4CBE0F45-8441-48F8-873C-7822FD059C07}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
@@ -47,18 +47,16 @@ Global
 		{28AFCA79-691F-4493-B639-D3CAD311189B}.Release|x86.ActiveCfg = Release|x86
 		{28AFCA79-691F-4493-B639-D3CAD311189B}.Release|x86.Build.0 = Release|x86
 		{28AFCA79-691F-4493-B639-D3CAD311189B}.Release|x86.Deploy.0 = Release|x86
-		{CFB2CA8F-6611-4DCA-981C-4B7AFCCA19A8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{CFB2CA8F-6611-4DCA-981C-4B7AFCCA19A8}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{CFB2CA8F-6611-4DCA-981C-4B7AFCCA19A8}.Debug|ARM.ActiveCfg = Debug|Any CPU
-		{CFB2CA8F-6611-4DCA-981C-4B7AFCCA19A8}.Debug|ARM.Build.0 = Debug|Any CPU
+		{CFB2CA8F-6611-4DCA-981C-4B7AFCCA19A8}.Debug|Any CPU.ActiveCfg = Debug|x86
+		{CFB2CA8F-6611-4DCA-981C-4B7AFCCA19A8}.Debug|ARM.ActiveCfg = Debug|ARM
+		{CFB2CA8F-6611-4DCA-981C-4B7AFCCA19A8}.Debug|ARM.Build.0 = Debug|ARM
 		{CFB2CA8F-6611-4DCA-981C-4B7AFCCA19A8}.Debug|x64.ActiveCfg = Debug|x64
 		{CFB2CA8F-6611-4DCA-981C-4B7AFCCA19A8}.Debug|x64.Build.0 = Debug|x64
 		{CFB2CA8F-6611-4DCA-981C-4B7AFCCA19A8}.Debug|x86.ActiveCfg = Debug|x86
 		{CFB2CA8F-6611-4DCA-981C-4B7AFCCA19A8}.Debug|x86.Build.0 = Debug|x86
-		{CFB2CA8F-6611-4DCA-981C-4B7AFCCA19A8}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{CFB2CA8F-6611-4DCA-981C-4B7AFCCA19A8}.Release|Any CPU.Build.0 = Release|Any CPU
-		{CFB2CA8F-6611-4DCA-981C-4B7AFCCA19A8}.Release|ARM.ActiveCfg = Release|Any CPU
-		{CFB2CA8F-6611-4DCA-981C-4B7AFCCA19A8}.Release|ARM.Build.0 = Release|Any CPU
+		{CFB2CA8F-6611-4DCA-981C-4B7AFCCA19A8}.Release|Any CPU.ActiveCfg = Release|x86
+		{CFB2CA8F-6611-4DCA-981C-4B7AFCCA19A8}.Release|ARM.ActiveCfg = Release|ARM
+		{CFB2CA8F-6611-4DCA-981C-4B7AFCCA19A8}.Release|ARM.Build.0 = Release|ARM
 		{CFB2CA8F-6611-4DCA-981C-4B7AFCCA19A8}.Release|x64.ActiveCfg = Release|x64
 		{CFB2CA8F-6611-4DCA-981C-4B7AFCCA19A8}.Release|x64.Build.0 = Release|x64
 		{CFB2CA8F-6611-4DCA-981C-4B7AFCCA19A8}.Release|x86.ActiveCfg = Release|x86

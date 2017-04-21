@@ -7,7 +7,7 @@
   <Import Project="$(BuildRoot)\build\props\buildoutput.props" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <Platform Condition=" '$(Platform)' == '' ">ARM</Platform>
     <ProjectGuid>{CFB2CA8F-6611-4DCA-981C-4B7AFCCA19A8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
@@ -22,8 +22,8 @@
     <ProjectTypeGuids>{A5A43C5B-DE2A-4C0C-9213-0A381AF9435A};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <PluginLayoutPath>$(BasePluginLayoutPath)UWP\</PluginLayoutPath>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|ARM' ">
+    <PlatformTarget>ARM</PlatformTarget>
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
@@ -31,8 +31,8 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|ARM' ">
+    <PlatformTarget>ARM</PlatformTarget>
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
     <DefineConstants>TRACE;NETFX_CORE;WINDOWS_UWP</DefineConstants>
@@ -95,7 +95,7 @@
     <EmbeddedResource Include="Properties\Microsoft.Xbox.Services._140.UWP.CSharp.rd.xml" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Microsoft.Xbox.Services.WinRT\Microsoft.Xbox.Services.WinRT.vcxproj">
+    <ProjectReference Include="..\Microsoft.Xbox.Services.WinRT.Interop\Microsoft.Xbox.Services.WinRT.Interop.vcxproj">
       <Project>{4cbe0f45-8441-48f8-873c-7822fd059c07}</Project>
       <Name>Microsoft.Xbox.Services.WinRT</Name>
     </ProjectReference>
