@@ -34,7 +34,7 @@ namespace Microsoft.Xbox.Services.Social.Manager
             : this(localUser, SocialUserGroupType.UserList)
         {
             if (userIds == null) throw new ArgumentNullException("userIds");
-            if (userIds.Count == 0) throw new ArgumentException("You must provide at least on user id to create a group.", "userIds");
+            if (userIds.Count == 0) throw new ArgumentException("You must provide at least one user id to create a group.", "userIds");
             if (userIds.Count > MaxUsersFromList) throw new ArgumentException(string.Format("You cannot provide more than {0} user ides to create a group.", MaxUsersFromList), "userIds");
 
             foreach (var userId in userIds)

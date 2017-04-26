@@ -3,6 +3,8 @@
 // 
 namespace Microsoft.Xbox.Services
 {
+    using global::System;
+    using global::System.Diagnostics;
     using global::System.IO;
     using global::System.Threading.Tasks;
 
@@ -22,11 +24,40 @@ namespace Microsoft.Xbox.Services
             string requestData = JsonConvert.SerializeObject(this, Formatting.Indented);
 
             string outputDir = @"C:\Temp\MockData";
-            Directory.CreateDirectory(outputDir);
-            string outputPath = Path.Combine(outputDir, "data.txt");
-            File.AppendAllText(outputPath, requestData);
+            if(!Directory.Exists(outputDir))
+            {
+                Directory.CreateDirectory(outputDir);
+            }
 
+            string outputPath = Path.Combine(outputDir, "data.txt");
+            using (var stream = this.GetWriteStream(outputPath))
+            {
+                using (var writer = new StreamWriter(stream))
+                {
+                    writer.Write(requestData);
+                }
+            }
             return Task.FromResult(MockXboxLiveData.GetMockResponse(this));
+        }
+
+        // This is used because there are times when multiple requests are issued at the same time
+        // As a result the output file becomes locked for the first request resulting in the other
+        // requests being unable to edit the file.
+        private FileStream GetWriteStream(string path, int timeoutMs = 1000)
+        {
+            var time = Stopwatch.StartNew();
+            while (time.ElapsedMilliseconds < timeoutMs)
+            {
+                try
+                {
+                    return new FileStream(path, FileMode.Append, FileAccess.Write);
+                }
+                catch (IOException e)
+                {
+                }
+            }
+
+            throw new TimeoutException(string.Format("Failed to get a write handle to {0} within {1} ms.", path, timeoutMs));
         }
     }
 }

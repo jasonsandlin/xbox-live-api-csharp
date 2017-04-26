@@ -21,6 +21,7 @@ namespace Microsoft.Xbox.Services.UnitTests.Social
         public void TestInitialize()
         {
             this.user = new XboxLiveUser();
+            MockXboxLiveData.Load(Environment.CurrentDirectory + "\\Social\\SocialUserGroupUT.json");
             SocialManager.Instance.AddLocalUser(this.user, SocialManagerExtraDetailLevel.PreferredColor).Wait();
         }
 

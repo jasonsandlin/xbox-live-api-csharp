@@ -3,6 +3,7 @@
 // 
 namespace Microsoft.Xbox.Services.UnitTests.Social
 {
+    using global::System;
     using global::System.Threading.Tasks;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
@@ -17,6 +18,7 @@ namespace Microsoft.Xbox.Services.UnitTests.Social
         public override void TestInitialize()
         {
             base.TestInitialize();
+            MockXboxLiveData.Load(Environment.CurrentDirectory + "\\Social\\SocialGraphUT.json");
             this.graph = new SocialGraph(user, SocialManagerExtraDetailLevel.PreferredColor);
         }
 
