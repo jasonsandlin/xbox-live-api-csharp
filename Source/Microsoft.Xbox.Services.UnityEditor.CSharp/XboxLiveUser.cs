@@ -1,9 +1,9 @@
 // Copyright (c) Microsoft Corporation
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace Microsoft.Xbox.Services
+namespace Microsoft.Xbox.Services.CSharp
 {
-    using Microsoft.Xbox.Services.System;
+    using Microsoft.Xbox.Services.CSharp.System;
 
     public partial class XboxLiveUser
     {

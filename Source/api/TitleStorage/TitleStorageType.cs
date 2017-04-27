@@ -2,7 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // 
 
-namespace Microsoft.Xbox.Services.TitleStorage
+namespace Microsoft.Xbox.Services.CSharp.TitleStorage
 {
     /// <summary> Defines values used to indicate title storage type.</summary>
     public enum TitleStorageType : int

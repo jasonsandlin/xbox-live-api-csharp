@@ -6,11 +6,11 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Microsoft.Xbox.Services.Multiplayer.Manager
+namespace Microsoft.Xbox.Services.CSharp.Multiplayer.Manager
 {
     public class MultiplayerLobbySession
     {
-        public Microsoft.Xbox.Services.Multiplayer.MultiplayerSessionConstants SessionConstants
+        public Microsoft.Xbox.Services.CSharp.Multiplayer.MultiplayerSessionConstants SessionConstants
         {
             get;
             private set;
@@ -40,7 +40,7 @@ namespace Microsoft.Xbox.Services.Multiplayer.Manager
             private set;
         }
 
-        public Microsoft.Xbox.Services.Multiplayer.MultiplayerSessionReference SessionReference
+        public Microsoft.Xbox.Services.CSharp.Multiplayer.MultiplayerSessionReference SessionReference
         {
             get;
             private set;
@@ -53,27 +53,27 @@ namespace Microsoft.Xbox.Services.Multiplayer.Manager
         }
 
 
-        public void AddLocalUser(Microsoft.Xbox.Services.XboxLiveUser user)
+        public void AddLocalUser(Microsoft.Xbox.Services.CSharp.XboxLiveUser user)
         {
             throw new NotImplementedException();
         }
 
-        public void RemoveLocalUser(Microsoft.Xbox.Services.XboxLiveUser user)
+        public void RemoveLocalUser(Microsoft.Xbox.Services.CSharp.XboxLiveUser user)
         {
             throw new NotImplementedException();
         }
 
-        public void SetLocalMemberProperties(Microsoft.Xbox.Services.XboxLiveUser user, string name, string valueJson, IntPtr context)
+        public void SetLocalMemberProperties(Microsoft.Xbox.Services.CSharp.XboxLiveUser user, string name, string valueJson, IntPtr context)
         {
             throw new NotImplementedException();
         }
 
-        public void DeleteLocalMemberProperties(Microsoft.Xbox.Services.XboxLiveUser user, string name, IntPtr context)
+        public void DeleteLocalMemberProperties(Microsoft.Xbox.Services.CSharp.XboxLiveUser user, string name, IntPtr context)
         {
             throw new NotImplementedException();
         }
 
-        public void SetLocalMemberConnectionAddress(Microsoft.Xbox.Services.XboxLiveUser user, string connectionAddress, IntPtr context)
+        public void SetLocalMemberConnectionAddress(Microsoft.Xbox.Services.CSharp.XboxLiveUser user, string connectionAddress, IntPtr context)
         {
             throw new NotImplementedException();
         }
@@ -98,12 +98,12 @@ namespace Microsoft.Xbox.Services.Multiplayer.Manager
             throw new NotImplementedException();
         }
 
-        public void InviteFriends(Microsoft.Xbox.Services.XboxLiveUser user, string contextStringId, string customActivationContext)
+        public void InviteFriends(Microsoft.Xbox.Services.CSharp.XboxLiveUser user, string contextStringId, string customActivationContext)
         {
             throw new NotImplementedException();
         }
 
-        public void InviteUsers(Microsoft.Xbox.Services.XboxLiveUser user, string[] xboxUserIds, string contextStringId, string customActivationContext)
+        public void InviteUsers(Microsoft.Xbox.Services.CSharp.XboxLiveUser user, string[] xboxUserIds, string contextStringId, string customActivationContext)
         {
             throw new NotImplementedException();
         }

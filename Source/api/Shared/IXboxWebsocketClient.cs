@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Microsoft.Xbox.Services.System;
+using Microsoft.Xbox.Services.CSharp.System;
 
-namespace Microsoft.Xbox.Services.Shared
+namespace Microsoft.Xbox.Services.CSharp.Shared
 {
     interface IXboxWebsocketClient : IDisposable
     {

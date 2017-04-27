@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace Microsoft.Xbox.Services.UnitTests
+namespace Microsoft.Xbox.Services.CSharp.UnitTests
 {
     using global::System;
     using global::System.Collections.Generic;
@@ -11,7 +11,7 @@ namespace Microsoft.Xbox.Services.UnitTests
     using global::System.Threading.Tasks;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Microsoft.Xbox.Services.Shared;
+    using Microsoft.Xbox.Services.CSharp.Shared;
 
     [TestClass]
     public class CallBufferTimerTests

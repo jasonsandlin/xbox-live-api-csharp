@@ -6,7 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Microsoft.Xbox.Services.Stats.Manager
+namespace Microsoft.Xbox.Services.CSharp.Stats.Manager
 {
 
     public class StatEventArgs

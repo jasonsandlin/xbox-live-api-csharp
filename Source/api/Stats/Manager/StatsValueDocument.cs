@@ -6,9 +6,9 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
-using Microsoft.Xbox.Services.Shared;
+using Microsoft.Xbox.Services.CSharp.Shared;
 
-namespace Microsoft.Xbox.Services.Stats.Manager
+namespace Microsoft.Xbox.Services.CSharp.Stats.Manager
 {
     public class StatsValueDocument
     {

@@ -3,4 +3,4 @@
 // 
 using System.Runtime.CompilerServices;
 
-[assembly:InternalsVisibleTo("Microsoft.Xbox.Services.UnitTests")]
+[assembly:InternalsVisibleTo("Microsoft.Xbox.Services.CSharp.UnitTests")]

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Microsoft.Xbox.Services.RealTimeActivity
+namespace Microsoft.Xbox.Services.CSharp.RealTimeActivity
 {
     public enum RealTimeActivitySubscriptionState : int
     {

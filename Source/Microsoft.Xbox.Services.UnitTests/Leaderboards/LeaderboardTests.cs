@@ -1,14 +1,14 @@
 ﻿// Copyright (c) Microsoft Corporation
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace Microsoft.Xbox.Services.UnitTests.Leaderboards
+namespace Microsoft.Xbox.Services.CSharp.UnitTests.Leaderboards
 {
     using global::System;
     using global::System.Threading.Tasks;
     using Newtonsoft.Json.Linq;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Microsoft.Xbox.Services.Leaderboard;
+    using Microsoft.Xbox.Services.CSharp.Leaderboard;
 
     [TestClass]
     public class LeaderboardTests : TestBase

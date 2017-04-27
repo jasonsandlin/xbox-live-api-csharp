@@ -6,12 +6,12 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Microsoft.Xbox.Services.Multiplayer.Manager
+namespace Microsoft.Xbox.Services.CSharp.Multiplayer.Manager
 {
     public class FindMatchCompletedEventArgs : EventArgs
     {
 
-        public Microsoft.Xbox.Services.Multiplayer.MultiplayerMeasurementFailure InitializationFailureCause
+        public Microsoft.Xbox.Services.CSharp.Multiplayer.MultiplayerMeasurementFailure InitializationFailureCause
         {
             get;
             private set;

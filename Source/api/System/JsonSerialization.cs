@@ -3,7 +3,7 @@
 // 
 using Newtonsoft.Json;
 
-namespace Microsoft.Xbox.Services
+namespace Microsoft.Xbox.Services.CSharp
 {
     internal static class JsonSerialization
     {

@@ -1,11 +1,11 @@
 // Copyright (c) Microsoft Corporation
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // 
-namespace Microsoft.Xbox.Services.Social.Manager
+namespace Microsoft.Xbox.Services.CSharp.Social.Manager
 {
     using global::System;
 
-    using Microsoft.Xbox.Services.Presence;
+    using Microsoft.Xbox.Services.CSharp.Presence;
 
     using Newtonsoft.Json;
 

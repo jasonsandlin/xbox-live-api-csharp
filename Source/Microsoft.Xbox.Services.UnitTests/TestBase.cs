@@ -1,12 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // 
-namespace Microsoft.Xbox.Services.UnitTests
+namespace Microsoft.Xbox.Services.CSharp.UnitTests
 {
     using global::System;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Microsoft.Xbox.Services.System;
+    using Microsoft.Xbox.Services.CSharp.System;
 
     [TestClass]
     public class TestBase

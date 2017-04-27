@@ -1,6 +1,6 @@
-﻿namespace Microsoft.Xbox.Services.Shared.TitleStorage
+﻿namespace Microsoft.Xbox.Services.CSharp.Shared.TitleStorage
 {
-    using Microsoft.Xbox.Services.TitleStorage;
+    using Microsoft.Xbox.Services.CSharp.TitleStorage;
 
     /// <summary>
     /// Sets or Gets the Properties needed for Downloading Blobs.

@@ -6,11 +6,11 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Microsoft.Xbox.Services.Multiplayer.Manager
+namespace Microsoft.Xbox.Services.CSharp.Multiplayer.Manager
 {
     public class MultiplayerGameSession
     {
-        public Microsoft.Xbox.Services.Multiplayer.MultiplayerSessionConstants SessionConstants
+        public Microsoft.Xbox.Services.CSharp.Multiplayer.MultiplayerSessionConstants SessionConstants
         {
             get;
             private set;
@@ -34,7 +34,7 @@ namespace Microsoft.Xbox.Services.Multiplayer.Manager
             private set;
         }
 
-        public Microsoft.Xbox.Services.Multiplayer.MultiplayerSessionReference SessionReference
+        public Microsoft.Xbox.Services.CSharp.Multiplayer.MultiplayerSessionReference SessionReference
         {
             get;
             private set;

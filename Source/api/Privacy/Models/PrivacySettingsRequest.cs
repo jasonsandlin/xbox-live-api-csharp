@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Microsoft.Xbox.Services.Privacy.Models
+namespace Microsoft.Xbox.Services.CSharp.Privacy.Models
 {
     internal class PrivacySettingsRequest
     {

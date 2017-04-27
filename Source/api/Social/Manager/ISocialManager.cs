@@ -3,9 +3,9 @@
 // 
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using Microsoft.Xbox.Services.System;
+using Microsoft.Xbox.Services.CSharp.System;
 
-namespace Microsoft.Xbox.Services.Social.Manager
+namespace Microsoft.Xbox.Services.CSharp.Social.Manager
 {
     public interface ISocialManager
     {

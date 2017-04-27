@@ -5,10 +5,10 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using Microsoft.Xbox.Services;
-using Microsoft.Xbox.Services.Shared;
+using Microsoft.Xbox.Services.CSharp;
+using Microsoft.Xbox.Services.CSharp.Shared;
 
-namespace Microsoft.Xbox.Services.System
+namespace Microsoft.Xbox.Services.CSharp.System
 {
     class XboxSystemFactory
     {

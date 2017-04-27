@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Microsoft.Xbox.Services.Stats.Manager.Models
+namespace Microsoft.Xbox.Services.CSharp.Stats.Manager.Models
 {
     class StatsValueDocumentModel
     {

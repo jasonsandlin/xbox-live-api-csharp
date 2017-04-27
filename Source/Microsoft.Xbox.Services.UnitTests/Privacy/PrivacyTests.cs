@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace Microsoft.Xbox.Services.UnitTests.Leaderboards
+namespace Microsoft.Xbox.Services.CSharp.UnitTests.Leaderboards
 {
     using global::System;
     using global::System.Collections.Generic;
@@ -9,7 +9,7 @@ namespace Microsoft.Xbox.Services.UnitTests.Leaderboards
     using Newtonsoft.Json.Linq;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Microsoft.Xbox.Services.Privacy;
+    using Microsoft.Xbox.Services.CSharp.Privacy;
 
     [TestClass]
     public class PrivacyTests : TestBase

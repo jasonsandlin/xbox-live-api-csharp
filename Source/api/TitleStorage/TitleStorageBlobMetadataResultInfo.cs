@@ -1,7 +1,7 @@
-﻿namespace Microsoft.Xbox.Services.Shared.TitleStorage
+﻿namespace Microsoft.Xbox.Services.CSharp.Shared.TitleStorage
 {
     using global::System.Collections.Generic;
-    using Microsoft.Xbox.Services.TitleStorage;
+    using Microsoft.Xbox.Services.CSharp.TitleStorage;
 
     /// <summary>
     /// Information used to retrieve metadata about Title Storage Blobs

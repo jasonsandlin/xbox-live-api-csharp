@@ -6,7 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Microsoft.Xbox.Services.Matchmaking
+namespace Microsoft.Xbox.Services.CSharp.Matchmaking
 {
     public class HopperStatisticsResponse
     {

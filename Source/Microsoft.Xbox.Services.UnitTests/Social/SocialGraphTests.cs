@@ -1,18 +1,18 @@
 ﻿// Copyright (c) Microsoft Corporation
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // 
-namespace Microsoft.Xbox.Services.UnitTests.Social
+namespace Microsoft.Xbox.Services.CSharp.UnitTests.Social
 {
     using global::System;
     using global::System.Threading.Tasks;
 
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Microsoft.Xbox.Services.Social.Manager;
+    using Microsoft.Xbox.Services.CSharp.Social.Manager;
 
     [TestClass]
     public class SocialGraphTests : TestBase
     {
-        private SocialGraph graph;
+        private Microsoft.Xbox.Services.CSharp.Social.Manager.SocialGraph graph;
 
         [TestInitialize]
         public override void TestInitialize()

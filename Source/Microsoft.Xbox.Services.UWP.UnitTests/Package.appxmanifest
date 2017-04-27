@@ -12,7 +12,7 @@
   <mp:PhoneIdentity PhoneProductId="86822c6f-05c8-48ee-860c-c980ac1085b0" PhonePublisherId="00000000-0000-0000-0000-000000000000"/>
 
   <Properties>
-    <DisplayName>Microsoft.Xbox.Services.UWP.UnitTests</DisplayName>
+    <DisplayName>Microsoft.Xbox.Services.CSharp.UWP.UnitTests</DisplayName>
     <PublisherDisplayName>jicailiu</PublisherDisplayName>
     <Logo>Assets\StoreLogo.png</Logo>
   </Properties>
@@ -27,12 +27,12 @@
   <Applications>
     <Application Id="vstest.executionengine.universal.App" 
         Executable="$targetnametoken$.exe"
-        EntryPoint="Microsoft.Xbox.Services.UWP.UnitTests.App">
+        EntryPoint="Microsoft.Xbox.Services.CSharp.UWP.UnitTests.App">
       <uap:VisualElements
-        DisplayName="Microsoft.Xbox.Services.UWP.UnitTests"
+        DisplayName="Microsoft.Xbox.Services.CSharp.UWP.UnitTests"
         Square150x150Logo="Assets\Square150x150Logo.png"
         Square44x44Logo="Assets\Square44x44Logo.png"
-        Description="Microsoft.Xbox.Services.UWP.UnitTests"
+        Description="Microsoft.Xbox.Services.CSharp.UWP.UnitTests"
         BackgroundColor="transparent">
         <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"/>
         <uap:SplashScreen Image="Assets\SplashScreen.png" />

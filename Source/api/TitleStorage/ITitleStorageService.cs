@@ -1,9 +1,9 @@
-﻿namespace Microsoft.Xbox.Services.Shared.TitleStorage
+﻿namespace Microsoft.Xbox.Services.CSharp.Shared.TitleStorage
 {
     using global::System.Collections.Generic;
     using global::System.Threading.Tasks;
 
-    using Microsoft.Xbox.Services.TitleStorage;
+    using Microsoft.Xbox.Services.CSharp.TitleStorage;
 
     /// <summary>
     /// Services that manage title storage.

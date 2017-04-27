@@ -6,7 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Microsoft.Xbox.Services.Matchmaking
+namespace Microsoft.Xbox.Services.CSharp.Matchmaking
 {
     public class MatchTicketDetailsResponse
     {
@@ -17,13 +17,13 @@ namespace Microsoft.Xbox.Services.Matchmaking
             private set;
         }
 
-        public Microsoft.Xbox.Services.Multiplayer.MultiplayerSessionReference TargetSession
+        public Microsoft.Xbox.Services.CSharp.Multiplayer.MultiplayerSessionReference TargetSession
         {
             get;
             private set;
         }
 
-        public Microsoft.Xbox.Services.Multiplayer.MultiplayerSessionReference TicketSession
+        public Microsoft.Xbox.Services.CSharp.Multiplayer.MultiplayerSessionReference TicketSession
         {
             get;
             private set;

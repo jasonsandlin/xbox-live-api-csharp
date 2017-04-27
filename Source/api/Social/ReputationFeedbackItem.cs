@@ -6,11 +6,11 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Microsoft.Xbox.Services.Social
+namespace Microsoft.Xbox.Services.CSharp.Social
 {
     public class ReputationFeedbackItem
     {
-        public ReputationFeedbackItem(string xboxUserId, ReputationFeedbackType reputationFeedbackType, Microsoft.Xbox.Services.Multiplayer.MultiplayerSessionReference sessionReference, string reasonMessage, string evidenceResourceId) {
+        public ReputationFeedbackItem(string xboxUserId, ReputationFeedbackType reputationFeedbackType, Microsoft.Xbox.Services.CSharp.Multiplayer.MultiplayerSessionReference sessionReference, string reasonMessage, string evidenceResourceId) {
         }
         public ReputationFeedbackItem() {
         }
@@ -27,7 +27,7 @@ namespace Microsoft.Xbox.Services.Social
             private set;
         }
 
-        public Microsoft.Xbox.Services.Multiplayer.MultiplayerSessionReference SessionReference
+        public Microsoft.Xbox.Services.CSharp.Multiplayer.MultiplayerSessionReference SessionReference
         {
             get;
             private set;

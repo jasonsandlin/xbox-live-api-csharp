@@ -6,7 +6,7 @@ using Windows.Security.Authentication.Web.Core;
 
 #endif
 
-namespace Microsoft.Xbox.Services
+namespace Microsoft.Xbox.Services.CSharp
 {
     public class TokenAndSignatureResult
     {

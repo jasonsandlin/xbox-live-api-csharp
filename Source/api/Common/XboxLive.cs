@@ -1,13 +1,13 @@
 ﻿// Copyright (c) Microsoft Corporation
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace Microsoft.Xbox.Services
+namespace Microsoft.Xbox.Services.CSharp
 {
     using global::System;
     using global::System.IO;
-    using Microsoft.Xbox.Services.Social.Manager;
-    using Microsoft.Xbox.Services.Stats.Manager;
-    using Microsoft.Xbox.Services.Privacy;
+    using Microsoft.Xbox.Services.CSharp.Social.Manager;
+    using Microsoft.Xbox.Services.CSharp.Stats.Manager;
+    using Microsoft.Xbox.Services.CSharp.Privacy;
 
     public partial class XboxLive : IDisposable
     {

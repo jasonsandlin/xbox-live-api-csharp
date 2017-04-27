@@ -1,14 +1,14 @@
 // Copyright (c) Microsoft Corporation
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // 
-namespace Microsoft.Xbox.Services.TitleStorage
+namespace Microsoft.Xbox.Services.CSharp.TitleStorage
 {
     using global::System;
     using global::System.Collections.Generic;
     using global::System.Text;
     using global::System.Threading.Tasks;
 
-    using Microsoft.Xbox.Services.Shared.TitleStorage;
+    using Microsoft.Xbox.Services.CSharp.Shared.TitleStorage;
 
     /// <summary>
     /// Services that manage title storage.

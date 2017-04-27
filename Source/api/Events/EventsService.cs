@@ -6,7 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Microsoft.Xbox.Services.Events
+namespace Microsoft.Xbox.Services.CSharp.Events
 {
     public class EventsService
     {

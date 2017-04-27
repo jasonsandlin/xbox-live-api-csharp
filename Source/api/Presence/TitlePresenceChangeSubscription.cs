@@ -6,7 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Microsoft.Xbox.Services.Presence
+namespace Microsoft.Xbox.Services.CSharp.Presence
 {
     public class TitlePresenceChangeSubscription
     {
@@ -35,7 +35,7 @@ namespace Microsoft.Xbox.Services.Presence
             private set;
         }
 
-        public Microsoft.Xbox.Services.RealTimeActivity.RealTimeActivitySubscriptionState State
+        public Microsoft.Xbox.Services.CSharp.RealTimeActivity.RealTimeActivitySubscriptionState State
         {
             get;
             private set;

@@ -3,25 +3,29 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Xbox.Services.UWP.CSharp", "Microsoft.Xbox.Services.UWP.CSharp\Microsoft.Xbox.Services.UWP.CSharp.csproj", "{CFB2CA8F-6611-4DCA-981C-4B7AFCCA19A8}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Xbox.Services.CSharp.UWP", "Microsoft.Xbox.Services.UWP.CSharp\Microsoft.Xbox.Services.CSharp.UWP.csproj", "{CFB2CA8F-6611-4DCA-981C-4B7AFCCA19A8}"
 EndProject
 Project("{D954291E-2A0B-460D-934E-DC6B0785DB48}") = "Microsoft.Xbox.Services.Shared", "api\Microsoft.Xbox.Services.Shared.shproj", "{035E5E11-4A0B-4D1F-BA13-9B62CCAFB2B8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Xbox.Services.UnityEditor.CSharp", "Microsoft.Xbox.Services.UnityEditor.CSharp\Microsoft.Xbox.Services.UnityEditor.CSharp.csproj", "{B7130C4B-B36B-4449-80B0-60037FC2E0CD}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Xbox.Services.CSharp.UnityEditor", "Microsoft.Xbox.Services.UnityEditor.CSharp\Microsoft.Xbox.Services.CSharp.UnityEditor.csproj", "{B7130C4B-B36B-4449-80B0-60037FC2E0CD}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Xbox.Services.Test.CSharp", "Microsoft.Xbox.Services.Test.CSharp\Microsoft.Xbox.Services.Test.CSharp.csproj", "{CBD81E44-F37F-47D6-B71B-A43A748AE09C}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Xbox.Services.UnitTests", "Microsoft.Xbox.Services.UnitTests\Microsoft.Xbox.Services.UnitTests.csproj", "{6A9CEF50-6BEF-4B8A-8DA5-F1FD0C1BA666}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Xbox.Services.CSharp.UnitTests", "Microsoft.Xbox.Services.UnitTests\Microsoft.Xbox.Services.CSharp.UnitTests.csproj", "{6A9CEF50-6BEF-4B8A-8DA5-F1FD0C1BA666}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Test", "Test", "{DC303DBE-6A2E-4D3F-A2EB-E06BD2E39568}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Microsoft.Xbox.Services.WinRT.Interop", "Microsoft.Xbox.Services.WinRT.Interop\Microsoft.Xbox.Services.WinRT.Interop.vcxproj", "{4CBE0F45-8441-48F8-873C-7822FD059C07}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Microsoft.Xbox.Services", "..\External\xbox-live-api\Build\Microsoft.Xbox.Services.140.UWP.WinRT\Microsoft.Xbox.Services.140.UWP.WinRT.vcxproj", "{D496A895-8C6B-46DC-A256-B623611D8FAA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Xbox.Services.UWP.UnitTests", "Microsoft.Xbox.Services.UWP.UnitTests\Microsoft.Xbox.Services.UWP.UnitTests.csproj", "{4C1806D5-7279-4DFC-8874-13D66D52A31B}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cpprestsdk140.uwp", "..\External\xbox-live-api\External\cpprestsdk\Release\src\build\vs14.uwp\cpprestsdk140.uwp.vcxproj", "{8EE38792-FFD4-4897-BB32-308A4DDCF0C5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Microsoft.Xbox.Services.CSharp.UWP.UnitTests", "Microsoft.Xbox.Services.UWP.UnitTests\Microsoft.Xbox.Services.CSharp.UWP.UnitTests.csproj", "{4C1806D5-7279-4DFC-8874-13D66D52A31B}"
 EndProject
 Global
 	GlobalSection(SharedMSBuildProjectFiles) = preSolution
 		api\Microsoft.Xbox.Services.Shared.projitems*{035e5e11-4a0b-4d1f-ba13-9b62ccafb2b8}*SharedItemsImports = 13
+		..\External\xbox-live-api\External\cpprestsdk\Release\src\build\common.vcxitems*{8ee38792-ffd4-4897-bb32-308a4ddcf0c5}*SharedItemsImports = 4
+		..\External\xbox-live-api\External\cpprestsdk\Release\src\build\winrt.vcxitems*{8ee38792-ffd4-4897-bb32-308a4ddcf0c5}*SharedItemsImports = 4
 		api\Microsoft.Xbox.Services.Shared.projitems*{b7130c4b-b36b-4449-80b0-60037fc2e0cd}*SharedItemsImports = 4
 		api\Microsoft.Xbox.Services.Shared.projitems*{cbd81e44-f37f-47d6-b71b-a43a748ae09c}*SharedItemsImports = 4
 		api\Microsoft.Xbox.Services.Shared.projitems*{cfb2ca8f-6611-4dca-981c-4b7afcca19a8}*SharedItemsImports = 4
@@ -83,18 +87,30 @@ Global
 		{6A9CEF50-6BEF-4B8A-8DA5-F1FD0C1BA666}.Release|x64.Build.0 = Release|Any CPU
 		{6A9CEF50-6BEF-4B8A-8DA5-F1FD0C1BA666}.Release|x86.ActiveCfg = Release|Any CPU
 		{6A9CEF50-6BEF-4B8A-8DA5-F1FD0C1BA666}.Release|x86.Build.0 = Release|Any CPU
-		{4CBE0F45-8441-48F8-873C-7822FD059C07}.Debug|ARM.ActiveCfg = Debug|ARM
-		{4CBE0F45-8441-48F8-873C-7822FD059C07}.Debug|ARM.Build.0 = Debug|ARM
-		{4CBE0F45-8441-48F8-873C-7822FD059C07}.Debug|x64.ActiveCfg = Debug|x64
-		{4CBE0F45-8441-48F8-873C-7822FD059C07}.Debug|x64.Build.0 = Debug|x64
-		{4CBE0F45-8441-48F8-873C-7822FD059C07}.Debug|x86.ActiveCfg = Debug|Win32
-		{4CBE0F45-8441-48F8-873C-7822FD059C07}.Debug|x86.Build.0 = Debug|Win32
-		{4CBE0F45-8441-48F8-873C-7822FD059C07}.Release|ARM.ActiveCfg = Release|ARM
-		{4CBE0F45-8441-48F8-873C-7822FD059C07}.Release|ARM.Build.0 = Release|ARM
-		{4CBE0F45-8441-48F8-873C-7822FD059C07}.Release|x64.ActiveCfg = Release|x64
-		{4CBE0F45-8441-48F8-873C-7822FD059C07}.Release|x64.Build.0 = Release|x64
-		{4CBE0F45-8441-48F8-873C-7822FD059C07}.Release|x86.ActiveCfg = Release|Win32
-		{4CBE0F45-8441-48F8-873C-7822FD059C07}.Release|x86.Build.0 = Release|Win32
+		{D496A895-8C6B-46DC-A256-B623611D8FAA}.Debug|ARM.ActiveCfg = Debug|ARM
+		{D496A895-8C6B-46DC-A256-B623611D8FAA}.Debug|ARM.Build.0 = Debug|ARM
+		{D496A895-8C6B-46DC-A256-B623611D8FAA}.Debug|x64.ActiveCfg = Debug|x64
+		{D496A895-8C6B-46DC-A256-B623611D8FAA}.Debug|x64.Build.0 = Debug|x64
+		{D496A895-8C6B-46DC-A256-B623611D8FAA}.Debug|x86.ActiveCfg = Debug|Win32
+		{D496A895-8C6B-46DC-A256-B623611D8FAA}.Debug|x86.Build.0 = Debug|Win32
+		{D496A895-8C6B-46DC-A256-B623611D8FAA}.Release|ARM.ActiveCfg = Release|ARM
+		{D496A895-8C6B-46DC-A256-B623611D8FAA}.Release|ARM.Build.0 = Release|ARM
+		{D496A895-8C6B-46DC-A256-B623611D8FAA}.Release|x64.ActiveCfg = Release|x64
+		{D496A895-8C6B-46DC-A256-B623611D8FAA}.Release|x64.Build.0 = Release|x64
+		{D496A895-8C6B-46DC-A256-B623611D8FAA}.Release|x86.ActiveCfg = Release|Win32
+		{D496A895-8C6B-46DC-A256-B623611D8FAA}.Release|x86.Build.0 = Release|Win32
+		{8EE38792-FFD4-4897-BB32-308A4DDCF0C5}.Debug|ARM.ActiveCfg = Debug|ARM
+		{8EE38792-FFD4-4897-BB32-308A4DDCF0C5}.Debug|ARM.Build.0 = Debug|ARM
+		{8EE38792-FFD4-4897-BB32-308A4DDCF0C5}.Debug|x64.ActiveCfg = Debug|x64
+		{8EE38792-FFD4-4897-BB32-308A4DDCF0C5}.Debug|x64.Build.0 = Debug|x64
+		{8EE38792-FFD4-4897-BB32-308A4DDCF0C5}.Debug|x86.ActiveCfg = Debug|Win32
+		{8EE38792-FFD4-4897-BB32-308A4DDCF0C5}.Debug|x86.Build.0 = Debug|Win32
+		{8EE38792-FFD4-4897-BB32-308A4DDCF0C5}.Release|ARM.ActiveCfg = Release|ARM
+		{8EE38792-FFD4-4897-BB32-308A4DDCF0C5}.Release|ARM.Build.0 = Release|ARM
+		{8EE38792-FFD4-4897-BB32-308A4DDCF0C5}.Release|x64.ActiveCfg = Release|x64
+		{8EE38792-FFD4-4897-BB32-308A4DDCF0C5}.Release|x64.Build.0 = Release|x64
+		{8EE38792-FFD4-4897-BB32-308A4DDCF0C5}.Release|x86.ActiveCfg = Release|Win32
+		{8EE38792-FFD4-4897-BB32-308A4DDCF0C5}.Release|x86.Build.0 = Release|Win32
 		{4C1806D5-7279-4DFC-8874-13D66D52A31B}.Debug|ARM.ActiveCfg = Debug|ARM
 		{4C1806D5-7279-4DFC-8874-13D66D52A31B}.Debug|ARM.Build.0 = Debug|ARM
 		{4C1806D5-7279-4DFC-8874-13D66D52A31B}.Debug|ARM.Deploy.0 = Debug|ARM

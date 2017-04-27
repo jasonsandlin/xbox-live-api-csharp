@@ -6,7 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Microsoft.Xbox.Services.UserStatistics
+namespace Microsoft.Xbox.Services.CSharp.UserStatistics
 {
     public class UserStatisticsService
     {
@@ -29,7 +29,7 @@ namespace Microsoft.Xbox.Services.UserStatistics
             throw new NotImplementedException();
         }
 
-        public Task<global::System.Collections.ObjectModel.ReadOnlyCollection<UserStatisticsResult>> GetMultipleUserStatisticsForMultipleServiceConfigurationsAsync(string[] xboxUserIds, Microsoft.Xbox.Services.UserStatistics.RequestedStatistics[] requestedServiceConfigurationStatisticsCollection)
+        public Task<global::System.Collections.ObjectModel.ReadOnlyCollection<UserStatisticsResult>> GetMultipleUserStatisticsForMultipleServiceConfigurationsAsync(string[] xboxUserIds, Microsoft.Xbox.Services.CSharp.UserStatistics.RequestedStatistics[] requestedServiceConfigurationStatisticsCollection)
         {
             throw new NotImplementedException();
         }

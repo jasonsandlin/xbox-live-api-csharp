@@ -1,15 +1,15 @@
 // Copyright (c) Microsoft Corporation
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace Microsoft.Xbox.Services.Stats.Manager
+namespace Microsoft.Xbox.Services.CSharp.Stats.Manager
 {
     using global::System;
     using global::System.Collections.Generic;
     using global::System.Linq;
     using global::System.Threading.Tasks;
 
-    using Microsoft.Xbox.Services.Leaderboard;
-    using Microsoft.Xbox.Services.Shared;
+    using Microsoft.Xbox.Services.CSharp.Leaderboard;
+    using Microsoft.Xbox.Services.CSharp.Shared;
 
     public class StatsManager : IStatsManager
     {

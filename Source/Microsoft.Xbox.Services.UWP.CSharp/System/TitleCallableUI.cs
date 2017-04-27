@@ -1,7 +1,7 @@
 // Copyright (c) Microsoft Corporation
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace Microsoft.Xbox.Services.System
+namespace Microsoft.Xbox.Services.CSharp.System
 {
     using global::System;
     using global::System.Collections.Generic;
@@ -21,7 +21,7 @@ namespace Microsoft.Xbox.Services.System
         /// </returns>
         public static Task ShowProfileCardUIAsync(XboxLiveUser user, string targetXboxUserId)
         {
-            return Microsoft.Xbox.Services.WinRT.TitleCallableUI.ShowProfileCardUIAsync(
+            return Microsoft.Xbox.Services.System.TitleCallableUI.ShowProfileCardUIForUserAsync(
                     targetXboxUserId,
                     user.WindowsSystemUser
                     ).AsTask();
@@ -30,29 +30,27 @@ namespace Microsoft.Xbox.Services.System
         /// <summary>
         /// Checks if the current user has a specific privilege
         /// </summary>
-        /// /// /// <param name="user">XboxLiveUser that identifies the user to show the UI on behalf of.</param>
+        /// <param name="user">XboxLiveUser that identifies the user to show the UI on behalf of.</param>
         /// <param name="privilege">The privilege to check.</param>
         /// <returns>
         /// A boolean which is true if the current user has the privilege.
         /// </returns>
-        public static bool CheckPrivilegeSilently(XboxLiveUser user, GamingPrivilege privilege)
+        public static bool CheckGamingPrivilegeSilently(XboxLiveUser user, GamingPrivilege privilege)
         {
             string scope;
             string policy;
             GetPrivilegeScopePolicy(out scope, out policy);
 
-            return Microsoft.Xbox.Services.WinRT.TitleCallableUI.CheckPrivilegeSilently(
-                    (Microsoft.Xbox.Services.WinRT.GamingPrivilege)privilege,
-                    user.WindowsSystemUser,
-                    scope,
-                    policy
+            return Microsoft.Xbox.Services.System.TitleCallableUI.CheckGamingPrivilegeSilentlyForUser(
+                    (Microsoft.Xbox.Services.System.GamingPrivilege)privilege,
+                    user.WindowsSystemUser
                     );
         }
 
         /// <summary>
         /// Checks if the current user has a specific privilege and if it doesn't, it shows UI 
         /// </summary>
-        /// /// <param name="user">XboxLiveUser that identifies the user to show the UI on behalf of.</param>
+        /// <param name="user">XboxLiveUser that identifies the user to show the UI on behalf of.</param>
         /// <param name="privilege">The privilege to check.</param>
         /// <param name="friendlyMessage">Text to display in addition to the stock text about the privilege</param>
         /// <returns>
@@ -60,30 +58,22 @@ namespace Microsoft.Xbox.Services.System
         /// The operation completes when the UI is closed.
         /// A boolean which is true if the current user has the privilege.
         /// </returns>
-        public static Task<bool> CheckPrivilegeWithUIAsync(XboxLiveUser user, GamingPrivilege privilege, string friendlyMessage)
+        public static Task<bool> CheckGamingPrivilegeWithUIAsync(XboxLiveUser user, GamingPrivilege privilege, string friendlyMessage)
         {
-            string scope;
-            string policy;
-            GetPrivilegeScopePolicy(out scope, out policy);
-
-            return Microsoft.Xbox.Services.WinRT.TitleCallableUI.CheckPrivilegeWithUIAsync(
-                    (Microsoft.Xbox.Services.WinRT.GamingPrivilege)privilege,
+            return Microsoft.Xbox.Services.System.TitleCallableUI.CheckGamingPrivilegeWithUIForUser(
+                    (Microsoft.Xbox.Services.System.GamingPrivilege)privilege,
                     friendlyMessage,
-                    user.WindowsSystemUser,
-                    scope,
-                    policy
+                    user.WindowsSystemUser
                     ).AsTask();
         }
 
         private static void GetPrivilegeScopePolicy(out string scope, out string policy)
         {
-            var appConfig = XboxLiveAppConfiguration.Instance;
+            var appConfig = XboxLiveAppConfiguration.SingletonInstance;
             var authConfig = new AuthConfig
             {
                 Sandbox = appConfig.Sandbox,
-                EnvrionmentPrefix = appConfig.EnvironmentPrefix,
-                Envrionment = appConfig.Environment,
-                UseCompactTicket = appConfig.UseFirstPartyToken
+                Envrionment = appConfig.Environment
             };
 
             scope = authConfig.RPSTicketService;

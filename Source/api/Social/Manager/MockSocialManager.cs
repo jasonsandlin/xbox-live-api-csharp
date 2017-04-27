@@ -1,15 +1,15 @@
 ﻿// Copyright (c) Microsoft Corporation
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // 
-namespace Microsoft.Xbox.Services.Social.Manager
+namespace Microsoft.Xbox.Services.CSharp.Social.Manager
 {
     using global::System;
     using global::System.Collections.Generic;
     using global::System.Linq;
     using global::System.Threading.Tasks;
 
-    using Microsoft.Xbox.Services.Presence;
-    using Microsoft.Xbox.Services.System;
+    using Microsoft.Xbox.Services.CSharp.Presence;
+    using Microsoft.Xbox.Services.CSharp.System;
 
     public class MockSocialManager : ISocialManager
     {

@@ -6,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace Microsoft.Xbox.Services.Social.Models
+namespace Microsoft.Xbox.Services.CSharp.Social.Models
 {
     internal class ProfileSettingsRequest
     {

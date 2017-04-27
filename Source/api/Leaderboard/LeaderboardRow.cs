@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Linq;
 
-namespace Microsoft.Xbox.Services.Leaderboard
+namespace Microsoft.Xbox.Services.CSharp.Leaderboard
 {
     public class LeaderboardRow
     {

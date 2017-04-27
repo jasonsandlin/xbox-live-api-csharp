@@ -1,10 +1,10 @@
 ﻿// Copyright (c) Microsoft Corporation
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace Microsoft.Xbox.Services.UnitTests.Stats
+namespace Microsoft.Xbox.Services.CSharp.UnitTests.Stats
 {
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Microsoft.Xbox.Services.Stats.Manager;
+    using Microsoft.Xbox.Services.CSharp.Stats.Manager;
 
     [TestClass]
     public class StatsManagerTests : TestBase

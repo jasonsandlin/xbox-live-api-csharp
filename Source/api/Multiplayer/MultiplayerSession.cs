@@ -6,7 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Microsoft.Xbox.Services.Multiplayer
+namespace Microsoft.Xbox.Services.CSharp.Multiplayer
 {
     public class MultiplayerSession
     {
@@ -199,12 +199,12 @@ namespace Microsoft.Xbox.Services.Multiplayer
             throw new NotImplementedException();
         }
 
-        public void SetCurrentUserMembersInGroup(Microsoft.Xbox.Services.Multiplayer.MultiplayerSessionMember[] membersInGroup)
+        public void SetCurrentUserMembersInGroup(Microsoft.Xbox.Services.CSharp.Multiplayer.MultiplayerSessionMember[] membersInGroup)
         {
             throw new NotImplementedException();
         }
 
-        public void SetCurrentUserQualityOfServiceMeasurements(Microsoft.Xbox.Services.Multiplayer.MultiplayerQualityOfServiceMeasurements[] measurements)
+        public void SetCurrentUserQualityOfServiceMeasurements(Microsoft.Xbox.Services.CSharp.Multiplayer.MultiplayerQualityOfServiceMeasurements[] measurements)
         {
             throw new NotImplementedException();
         }
@@ -284,7 +284,7 @@ namespace Microsoft.Xbox.Services.Multiplayer
             throw new NotImplementedException();
         }
 
-        public void SetMutableRoleSettings(Dictionary<string, Microsoft.Xbox.Services.Multiplayer.MultiplayerRoleType> roleTypes)
+        public void SetMutableRoleSettings(Dictionary<string, Microsoft.Xbox.Services.CSharp.Multiplayer.MultiplayerRoleType> roleTypes)
         {
             throw new NotImplementedException();
         }
@@ -324,7 +324,7 @@ namespace Microsoft.Xbox.Services.Multiplayer
             throw new NotImplementedException();
         }
 
-        public void SetMeasurementServerAddresses(Microsoft.Xbox.Services.GameServerPlatform.QualityOfServiceServer[] measurementServerAddresses)
+        public void SetMeasurementServerAddresses(Microsoft.Xbox.Services.CSharp.GameServerPlatform.QualityOfServiceServer[] measurementServerAddresses)
         {
             throw new NotImplementedException();
         }

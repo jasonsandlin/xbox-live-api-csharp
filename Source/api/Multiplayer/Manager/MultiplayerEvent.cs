@@ -6,7 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Microsoft.Xbox.Services.Multiplayer.Manager
+namespace Microsoft.Xbox.Services.CSharp.Multiplayer.Manager
 {
     public class MultiplayerEvent
     {
@@ -17,7 +17,7 @@ namespace Microsoft.Xbox.Services.Multiplayer.Manager
             private set;
         }
 
-        public Microsoft.Xbox.Services.Multiplayer.Manager.ultiplayerEventArgs EventArgs
+        public Microsoft.Xbox.Services.CSharp.Multiplayer.Manager.ultiplayerEventArgs EventArgs
         {
             get;
             private set;

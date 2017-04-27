@@ -6,7 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Microsoft.Xbox.Services.Privacy
+namespace Microsoft.Xbox.Services.CSharp.Privacy
 {
     using Newtonsoft.Json;
 

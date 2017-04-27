@@ -5,7 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Microsoft.Xbox.Services.System
+namespace Microsoft.Xbox.Services.CSharp.System
 {
     internal class AuthConfig
     {

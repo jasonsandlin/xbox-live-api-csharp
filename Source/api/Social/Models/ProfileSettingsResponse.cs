@@ -7,7 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Runtime.Serialization;
 
-namespace Microsoft.Xbox.Services.Social.Models
+namespace Microsoft.Xbox.Services.CSharp.Social.Models
 {
     public class ProfileSettingsResponse
     {

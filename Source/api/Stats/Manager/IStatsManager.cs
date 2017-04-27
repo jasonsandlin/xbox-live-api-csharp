@@ -3,11 +3,11 @@
 // 
 using System;
 using System.Collections.Generic;
-using Microsoft.Xbox.Services.System;
-using Microsoft.Xbox.Services.Leaderboard;
+using Microsoft.Xbox.Services.CSharp.System;
+using Microsoft.Xbox.Services.CSharp.Leaderboard;
 using global::System.Threading.Tasks;
 
-namespace Microsoft.Xbox.Services.Stats.Manager
+namespace Microsoft.Xbox.Services.CSharp.Stats.Manager
 {
     public interface IStatsManager
     {

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Microsoft.Xbox.Services.UserStatistics
+namespace Microsoft.Xbox.Services.CSharp.UserStatistics
 {
     public class StatisticChangeEventArgs : EventArgs
     {

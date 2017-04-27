@@ -1,12 +1,12 @@
 ﻿// Copyright (c) Microsoft Corporation
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace Microsoft.Xbox.Services.UWP.UnitTests
+namespace Microsoft.Xbox.Services.CSharp.UWP.UnitTests
 {
     using global::System;
     using Windows.System;
     using Microsoft.VisualStudio.TestPlatform.UnitTestFramework;
-    using Microsoft.Xbox.Services.System;
+    using Microsoft.Xbox.Services.CSharp.System;
     using global::System.Linq;
     using Moq;
     using global::System.Threading.Tasks;

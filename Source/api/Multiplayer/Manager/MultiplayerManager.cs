@@ -6,7 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Microsoft.Xbox.Services.Multiplayer.Manager
+namespace Microsoft.Xbox.Services.CSharp.Multiplayer.Manager
 {
     public class MultiplayerManager
     {
@@ -69,12 +69,12 @@ namespace Microsoft.Xbox.Services.Multiplayer.Manager
             throw new NotImplementedException();
         }
 
-        public void JoinLobby(global::System.Object eventArgs, Microsoft.Xbox.Services.XboxLiveUser user)
+        public void JoinLobby(global::System.Object eventArgs, Microsoft.Xbox.Services.CSharp.XboxLiveUser user)
         {
             throw new NotImplementedException();
         }
 
-        public void JoinLobby(string handleId, Microsoft.Xbox.Services.XboxLiveUser user)
+        public void JoinLobby(string handleId, Microsoft.Xbox.Services.CSharp.XboxLiveUser user)
         {
             throw new NotImplementedException();
         }
@@ -109,7 +109,7 @@ namespace Microsoft.Xbox.Services.Multiplayer.Manager
             throw new NotImplementedException();
         }
 
-        public void SetQualityOfServiceMeasurements(Microsoft.Xbox.Services.Multiplayer.MultiplayerQualityOfServiceMeasurements[] measurements)
+        public void SetQualityOfServiceMeasurements(Microsoft.Xbox.Services.CSharp.Multiplayer.MultiplayerQualityOfServiceMeasurements[] measurements)
         {
             throw new NotImplementedException();
         }

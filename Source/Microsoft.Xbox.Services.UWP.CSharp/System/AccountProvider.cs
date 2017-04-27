@@ -1,5 +1,5 @@
 ﻿
-namespace Microsoft.Xbox.Services.System
+namespace Microsoft.Xbox.Services.CSharp.System
 {
     using global::System;
     using Windows.System;

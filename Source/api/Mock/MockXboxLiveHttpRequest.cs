@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // 
-namespace Microsoft.Xbox.Services
+namespace Microsoft.Xbox.Services.CSharp
 {
     using global::System;
     using global::System.Diagnostics;
@@ -52,7 +52,7 @@ namespace Microsoft.Xbox.Services
                 {
                     return new FileStream(path, FileMode.Append, FileAccess.Write);
                 }
-                catch (IOException e)
+                catch (IOException)
                 {
                 }
             }

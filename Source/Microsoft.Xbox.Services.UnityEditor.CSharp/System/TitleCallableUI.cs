@@ -1,11 +1,11 @@
 // Copyright (c) Microsoft Corporation
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace Microsoft.Xbox.Services.System
+namespace Microsoft.Xbox.Services.CSharp.System
 {
     using global::System;
     using global::System.Threading.Tasks;
-    using Microsoft.Xbox.Services;
+    using Microsoft.Xbox.Services.CSharp;
 
     public class TitleCallableUI
     {
@@ -26,12 +26,12 @@ namespace Microsoft.Xbox.Services.System
         /// <summary>
         /// Checks if the current user has a specific privilege
         /// </summary>
-        /// /// /// <param name="user">XboxLiveUser that identifies the user to show the UI on behalf of.</param>
+        /// <param name="user">XboxLiveUser that identifies the user to show the UI on behalf of.</param>
         /// <param name="privilege">The privilege to check.</param>
         /// <returns>
         /// A boolean which is true if the current user has the privilege.
         /// </returns>
-        public static bool CheckPrivilegeSilently(XboxLiveUser user, GamingPrivilege privilege)
+        public static bool CheckGamingPrivilegeSilentlyForUser(XboxLiveUser user, GamingPrivilege privilege)
         {
             return true;
         }
@@ -39,7 +39,7 @@ namespace Microsoft.Xbox.Services.System
         /// <summary>
         /// Checks if the current user has a specific privilege and if it doesn't, it shows UI 
         /// </summary>
-        /// /// <param name="user">XboxLiveUser that identifies the user to show the UI on behalf of.</param>
+        /// <param name="user">XboxLiveUser that identifies the user to show the UI on behalf of.</param>
         /// <param name="privilege">The privilege to check.</param>
         /// <param name="friendlyMessage">Text to display in addition to the stock text about the privilege</param>
         /// <returns>
@@ -47,7 +47,7 @@ namespace Microsoft.Xbox.Services.System
         /// The operation completes when the UI is closed.
         /// A boolean which is true if the current user has the privilege.
         /// </returns>
-        public static Task<bool> CheckPrivilegeWithUIAsync(XboxLiveUser user, GamingPrivilege privilege, string friendlyMessage)
+        public static Task<bool> CheckGamingPrivilegeWithUIAsync(XboxLiveUser user, GamingPrivilege privilege, string friendlyMessage)
         {
             return Task.FromResult(true);
         }

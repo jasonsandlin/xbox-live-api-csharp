@@ -6,7 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Microsoft.Xbox.Services.Social
+namespace Microsoft.Xbox.Services.CSharp.Social
 {
     public class SocialRelationshipChangeSubscription
     {
@@ -29,7 +29,7 @@ namespace Microsoft.Xbox.Services.Social
             private set;
         }
 
-        public Microsoft.Xbox.Services.RealTimeActivity.RealTimeActivitySubscriptionState State
+        public Microsoft.Xbox.Services.CSharp.RealTimeActivity.RealTimeActivitySubscriptionState State
         {
             get;
             private set;

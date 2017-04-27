@@ -8,15 +8,15 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("Microsoft.Xbox.Services.UWP.CSharp")]
+[assembly: AssemblyTitle("Microsoft.Xbox.Services.CSharp.UWP")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("Microsoft.Xbox.Services.UWP.CSharp")]
+[assembly: AssemblyProduct("Microsoft.Xbox.Services.CSharp.UWP")]
 [assembly: AssemblyCopyright("Copyright © Microsoft 2017")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
-[assembly: InternalsVisibleTo("Microsoft.Xbox.Services.UWP.UnitTests")]
+[assembly: InternalsVisibleTo("Microsoft.Xbox.Services.CSharp.UWP.UnitTests")]
 [assembly: InternalsVisibleTo("DynamicProxyGenAssembly2")]
 
 // Version information for an assembly consists of the following four values:

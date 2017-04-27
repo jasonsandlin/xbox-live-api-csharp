@@ -5,9 +5,9 @@ using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Microsoft.Xbox.Services.TitleStorage
+namespace Microsoft.Xbox.Services.CSharp.TitleStorage
 {
-    using Microsoft.Xbox.Services.Shared.TitleStorage;
+    using Microsoft.Xbox.Services.CSharp.Shared.TitleStorage;
 
     public class TitleStorageBlobMetadataResult
     {

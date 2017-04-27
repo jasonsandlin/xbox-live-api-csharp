@@ -6,7 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Microsoft.Xbox.Services.Social
+namespace Microsoft.Xbox.Services.CSharp.Social
 {
     public class ReputationService
     {
@@ -16,7 +16,7 @@ namespace Microsoft.Xbox.Services.Social
             throw new NotImplementedException();
         }
 
-        public Task SubmitBatchReputationFeedbackAsync(Microsoft.Xbox.Services.Social.ReputationFeedbackItem[] feedbackItems)
+        public Task SubmitBatchReputationFeedbackAsync(Microsoft.Xbox.Services.CSharp.Social.ReputationFeedbackItem[] feedbackItems)
         {
             throw new NotImplementedException();
         }

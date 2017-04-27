@@ -2,9 +2,9 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // 
 
-namespace Microsoft.Xbox.Services.TitleStorage
+namespace Microsoft.Xbox.Services.CSharp.TitleStorage
 {
-    using Microsoft.Xbox.Services.Shared.TitleStorage;
+    using Microsoft.Xbox.Services.CSharp.Shared.TitleStorage;
 
     using Newtonsoft.Json;
 

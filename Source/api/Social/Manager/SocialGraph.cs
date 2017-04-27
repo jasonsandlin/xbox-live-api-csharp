@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 
-namespace Microsoft.Xbox.Services.Social.Manager
+namespace Microsoft.Xbox.Services.CSharp.Social.Manager
 {
     using global::System;
     using global::System.Collections.Generic;
@@ -10,8 +10,8 @@ namespace Microsoft.Xbox.Services.Social.Manager
     using global::System.Threading;
     using global::System.Threading.Tasks;
 
-    using Microsoft.Xbox.Services.Presence;
-    using Microsoft.Xbox.Services.RealTimeActivity;
+    using Microsoft.Xbox.Services.CSharp.Presence;
+    using Microsoft.Xbox.Services.CSharp.RealTimeActivity;
 
     internal class SocialGraph : IDisposable
     {

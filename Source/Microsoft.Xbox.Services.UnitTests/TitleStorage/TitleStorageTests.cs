@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Microsoft Corporation
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // 
-namespace Microsoft.Xbox.Services.UnitTests.TitleStorage
+namespace Microsoft.Xbox.Services.CSharp.UnitTests.TitleStorage
 {
     using global::System;
     using global::System.Collections.Generic;
@@ -10,8 +10,8 @@ namespace Microsoft.Xbox.Services.UnitTests.TitleStorage
     using global::System.Threading;
     using global::System.Threading.Tasks;
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Microsoft.Xbox.Services.Shared.TitleStorage;
-    using Microsoft.Xbox.Services.TitleStorage;
+    using Microsoft.Xbox.Services.CSharp.Shared.TitleStorage;
+    using Microsoft.Xbox.Services.CSharp.TitleStorage;
 
     using Newtonsoft.Json.Linq;
 

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Microsoft.Xbox.Services.UserStatistics
+namespace Microsoft.Xbox.Services.CSharp.UserStatistics
 {
     public class StatisticChangeSubscription
     {
@@ -41,7 +41,7 @@ namespace Microsoft.Xbox.Services.UserStatistics
             private set;
         }
 
-        public Microsoft.Xbox.Services.RealTimeActivity.RealTimeActivitySubscriptionState State
+        public Microsoft.Xbox.Services.CSharp.RealTimeActivity.RealTimeActivitySubscriptionState State
         {
             get;
             private set;

@@ -6,7 +6,7 @@ using System.Linq;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
-namespace Microsoft.Xbox.Services.Presence
+namespace Microsoft.Xbox.Services.CSharp.Presence
 {
     public class PresenceBroadcastRecord
     {

@@ -2,7 +2,7 @@
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // 
 
-namespace Microsoft.Xbox.Services.Privacy
+namespace Microsoft.Xbox.Services.CSharp.Privacy
 {
     using global::System.Text;
     using global::System.Threading.Tasks;

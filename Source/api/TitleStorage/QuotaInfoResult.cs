@@ -1,6 +1,6 @@
-﻿namespace Microsoft.Xbox.Services.Shared.TitleStorage
+﻿namespace Microsoft.Xbox.Services.CSharp.Shared.TitleStorage
 {
-    using Services.TitleStorage;
+    using Services.CSharp.TitleStorage;
 
     public class QuotaInfoResult
     {

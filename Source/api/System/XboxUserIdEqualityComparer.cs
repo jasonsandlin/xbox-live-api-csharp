@@ -1,11 +1,11 @@
 // Copyright (c) Microsoft Corporation
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // 
-namespace Microsoft.Xbox.Services
+namespace Microsoft.Xbox.Services.CSharp
 {
     using global::System.Collections.Generic;
 
-    using Microsoft.Xbox.Services.Social.Manager;
+    using Microsoft.Xbox.Services.CSharp.Social.Manager;
 
     /// <summary>
     /// An equality comparer that only uses the XUID property.

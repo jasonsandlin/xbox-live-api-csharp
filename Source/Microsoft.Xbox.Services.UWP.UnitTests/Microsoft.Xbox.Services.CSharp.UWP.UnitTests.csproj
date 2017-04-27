@@ -7,8 +7,8 @@
     <ProjectGuid>{4C1806D5-7279-4DFC-8874-13D66D52A31B}</ProjectGuid>
     <OutputType>AppContainerExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>Microsoft.Xbox.Services.UWP.UnitTests</RootNamespace>
-    <AssemblyName>Microsoft.Xbox.Services.UWP.UnitTests</AssemblyName>
+    <RootNamespace>Microsoft.Xbox.Services.CSharp.UWP.UnitTests</RootNamespace>
+    <AssemblyName>Microsoft.Xbox.Services.CSharp.UWP.UnitTests</AssemblyName>
     <DefaultLanguage>en-US</DefaultLanguage>
     <TargetPlatformIdentifier>UAP</TargetPlatformIdentifier>
     <TargetPlatformVersion>10.0.14393.0</TargetPlatformVersion>
@@ -130,9 +130,17 @@
     <Service Include="{82A7F48D-3B50-4B1E-B82E-3ADA8210C358}" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Microsoft.Xbox.Services.UWP.CSharp\Microsoft.Xbox.Services.UWP.CSharp.csproj">
+    <ProjectReference Include="..\..\External\xbox-live-api\Build\Microsoft.Xbox.Services.140.UWP.WinRT\Microsoft.Xbox.Services.140.UWP.WinRT.vcxproj">
+      <Project>{d496a895-8c6b-46dc-a256-b623611d8faa}</Project>
+      <Name>Microsoft.Xbox.Services</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\External\xbox-live-api\External\cpprestsdk\Release\src\build\vs14.uwp\cpprestsdk140.uwp.vcxproj">
+      <Project>{8EE38792-FFD4-4897-BB32-308A4DDCF0C5}</Project>
+      <Name>cpprestsdk140.uwp</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Microsoft.Xbox.Services.UWP.CSharp\Microsoft.Xbox.Services.CSharp.UWP.csproj">
       <Project>{cfb2ca8f-6611-4dca-981c-4b7afcca19a8}</Project>
-      <Name>Microsoft.Xbox.Services.UWP.CSharp</Name>
+      <Name>Microsoft.Xbox.Services.CSharp.UWP</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup Condition=" '$(VisualStudioVersion)' == '' or '$(VisualStudioVersion)' &lt; '14.0' ">
