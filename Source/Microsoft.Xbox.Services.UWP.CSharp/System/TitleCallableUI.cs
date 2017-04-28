@@ -21,10 +21,12 @@ namespace Microsoft.Xbox.Services.CSharp.System
         /// </returns>
         public static Task ShowProfileCardUIAsync(XboxLiveUser user, string targetXboxUserId)
         {
-            return Microsoft.Xbox.Services.System.TitleCallableUI.ShowProfileCardUIForUserAsync(
-                    targetXboxUserId,
-                    user.WindowsSystemUser
-                    ).AsTask();
+            return Task.FromResult(true);
+
+            //return Microsoft.Xbox.Services.System.TitleCallableUI.ShowProfileCardUIForUserAsync(
+            //        targetXboxUserId,
+            //        user.WindowsSystemUser
+            //        ).AsTask();
         }
 
         /// <summary>
@@ -35,16 +37,20 @@ namespace Microsoft.Xbox.Services.CSharp.System
         /// <returns>
         /// A boolean which is true if the current user has the privilege.
         /// </returns>
-        public static bool CheckGamingPrivilegeSilently(XboxLiveUser user, GamingPrivilege privilege)
+        public static int CheckGamingPrivilegeSilently(XboxLiveUser user, GamingPrivilege privilege)
         {
-            string scope;
-            string policy;
-            GetPrivilegeScopePolicy(out scope, out policy);
+            TestWindowsRuntimeComponent.Class1 c = new TestWindowsRuntimeComponent.Class1();
+            return c.Add(10, 20);
 
-            return Microsoft.Xbox.Services.System.TitleCallableUI.CheckGamingPrivilegeSilentlyForUser(
-                    (Microsoft.Xbox.Services.System.GamingPrivilege)privilege,
-                    user.WindowsSystemUser
-                    );
+            //return 0;
+            //string scope;
+            //string policy;
+            //GetPrivilegeScopePolicy(out scope, out policy);
+
+            //return Microsoft.Xbox.Services.System.TitleCallableUI.CheckGamingPrivilegeSilentlyForUser(
+            //        (Microsoft.Xbox.Services.System.GamingPrivilege)privilege,
+            //        user.WindowsSystemUser
+            //        );
         }
 
         /// <summary>
@@ -60,24 +66,26 @@ namespace Microsoft.Xbox.Services.CSharp.System
         /// </returns>
         public static Task<bool> CheckGamingPrivilegeWithUIAsync(XboxLiveUser user, GamingPrivilege privilege, string friendlyMessage)
         {
-            return Microsoft.Xbox.Services.System.TitleCallableUI.CheckGamingPrivilegeWithUIForUser(
-                    (Microsoft.Xbox.Services.System.GamingPrivilege)privilege,
-                    friendlyMessage,
-                    user.WindowsSystemUser
-                    ).AsTask();
+            return Task.FromResult(true);
+
+            //return Microsoft.Xbox.Services.System.TitleCallableUI.CheckGamingPrivilegeWithUIForUser(
+            //        (Microsoft.Xbox.Services.System.GamingPrivilege)privilege,
+            //        friendlyMessage,
+            //        user.WindowsSystemUser
+            //        ).AsTask();
         }
 
-        private static void GetPrivilegeScopePolicy(out string scope, out string policy)
-        {
-            var appConfig = XboxLiveAppConfiguration.SingletonInstance;
-            var authConfig = new AuthConfig
-            {
-                Sandbox = appConfig.Sandbox,
-                Envrionment = appConfig.Environment
-            };
+        //private static void GetPrivilegeScopePolicy(out string scope, out string policy)
+        //{
+        //    var appConfig = XboxLiveAppConfiguration.SingletonInstance;
+        //    var authConfig = new AuthConfig
+        //    {
+        //        Sandbox = appConfig.Sandbox,
+        //        Envrionment = appConfig.Environment
+        //    };
 
-            scope = authConfig.RPSTicketService;
-            policy = authConfig.RPSTicketPolicy;
-        }
+        //    scope = authConfig.RPSTicketService;
+        //    policy = authConfig.RPSTicketPolicy;
+        //}
     }
 }

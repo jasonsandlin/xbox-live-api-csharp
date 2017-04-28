@@ -31,9 +31,9 @@ namespace Microsoft.Xbox.Services.CSharp.System
         /// <returns>
         /// A boolean which is true if the current user has the privilege.
         /// </returns>
-        public static bool CheckGamingPrivilegeSilentlyForUser(XboxLiveUser user, GamingPrivilege privilege)
+        public static int CheckGamingPrivilegeSilentlyForUser(XboxLiveUser user, GamingPrivilege privilege)
         {
-            return true;
+            return 0;
         }
 
         /// <summary>
