@@ -81,6 +81,17 @@ namespace Microsoft.Xbox.Services.System
         {
             await this.Provider.InitializeProvider(this.CreationContext);
 
+            // Try get the default system user for single user application
+            if (!IsMultiUserApplication)
+            {
+                var allUser = await Windows.System.User.FindAllAsync();
+                var validSysUser = allUser.Where(user => (user.Type != Windows.System.UserType.LocalGuest || user.Type != Windows.System.UserType.RemoteGuest)).ToList();
+                if (validSysUser.Count > 0)
+                {
+                    this.CreationContext = validSysUser[0];
+                }
+            }
+
             TokenAndSignatureResult result = await this.InternalGetTokenAndSignatureHelperAsync("GET", this.AuthConfig.XboxLiveEndpoint, "", null, showUI, false);
             SignInStatus status = ConvertWebTokenRequestStatus(result.TokenRequestResultStatus);
 
