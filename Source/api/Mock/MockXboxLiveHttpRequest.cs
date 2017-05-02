@@ -52,7 +52,7 @@ namespace Microsoft.Xbox.Services
                 {
                     return new FileStream(path, FileMode.Append, FileAccess.Write);
                 }
-                catch (IOException e)
+                catch (IOException)
                 {
                 }
             }
