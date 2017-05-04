@@ -69,6 +69,11 @@ namespace Microsoft.Xbox.Services.Stats.Manager
             XboxLiveHttpRequest req = XboxLiveHttpRequest.Create(HttpMethod.Get, this.statsReadEndpoint, pathAndQuery);
             return req.GetResponseWithAuth(user).ContinueWith(task =>
             {
+                if (task.IsFaulted)
+                {
+                    throw task.Exception;
+                }
+
                 XboxLiveHttpResponse response = task.Result;
                 var svdModel = JsonConvert.DeserializeObject<Models.StatsValueDocumentModel>(response.ResponseBodyString);
                 var svd = new StatsValueDocument(svdModel.Stats.Title, svdModel.Revision)

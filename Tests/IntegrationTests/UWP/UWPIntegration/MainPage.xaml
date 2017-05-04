@@ -62,6 +62,7 @@
             <StackPanel Orientation="Horizontal">
                 <Button Content="Write Stats (global)" VerticalAlignment="Top" Click="WriteGlobalStats_Click" Margin="4"/>
                 <Button Content="Write Stats (social)" VerticalAlignment="Top" Click="WriteSocialStats_Click" Margin="4"/>
+                <Button Content="Flush Stats" VerticalAlignment="Top" Click="FlushStats_Click" Margin="4"/>
             </StackPanel>
             <TextBlock x:Name="StatsData" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="150" Margin="4"/>
         </StackPanel>

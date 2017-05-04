@@ -123,6 +123,12 @@ namespace UWPIntegration
             this.StatsManager.SetStatAsInteger(this.User, "jumps", ++this.jumps);
         }
 
+        private void FlushStats_Click(object sender, RoutedEventArgs e)
+        {
+            if (!this.User.IsSignedIn) return;
+            this.StatsManager.RequestFlushToService(this.User);
+        }
+
         private void WriteSocialStats_Click(object sender, RoutedEventArgs e)
         {
             if (!this.User.IsSignedIn) return;

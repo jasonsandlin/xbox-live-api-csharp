@@ -92,13 +92,15 @@ namespace Microsoft.Xbox.Services.Stats.Manager
                     {
                         if (this.userDocumentMap.ContainsKey(xboxUserId))
                         {
-                            StatsValueDocument document = statsValueDocTask.Result;
+                            StatsValueDocument document;
                             if (statsValueDocTask.IsFaulted)    // if there was an error, but the user is signed in, we assume offline sign in
                             {
-                                this.userDocumentMap[xboxUserId].State = StatsValueDocument.StatValueDocumentState.OfflineNotLoaded;
+                                document = this.userDocumentMap[xboxUserId];
+                                document.State = StatsValueDocument.StatValueDocumentState.OfflineNotLoaded;
                             }
                             else
                             {
+                                document = statsValueDocTask.Result;
                                 this.userDocumentMap[xboxUserId].MergeStatDocument(document);
                             }
 
