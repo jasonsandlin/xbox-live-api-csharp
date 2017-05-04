@@ -285,8 +285,10 @@ namespace Microsoft.Xbox.Services.Stats.Manager
                                 this.userDocumentMap[user.XboxUserId].MergeStatDocument(updatedSvd);
                                 UpdateStatsValueDocument(user, updatedSvd);
                             }
-
-                            // How do you handle if this failed?
+                            else
+                            {
+                                UpdateStatsValueDocument(user, this.userDocumentMap[user.XboxUserId]);
+                            }
                         }
                         else
                         {
