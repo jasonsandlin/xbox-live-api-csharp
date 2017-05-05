@@ -51,7 +51,7 @@ namespace Microsoft.Xbox.Services
         }
 
         internal readonly XboxLiveSettings contextSettings;
-        internal readonly HttpWebRequest webRequest;
+        internal HttpWebRequest webRequest;
         internal readonly Dictionary<string, string> customHeaders = new Dictionary<string, string>();
         internal bool hasPerformedRetryOn401 { get; set; }
         internal uint iterationNumber { get; set; }
@@ -277,6 +277,7 @@ namespace Microsoft.Xbox.Services
                         // Wait and retry call
                         this.RouteServiceCall();
                         this.Sleep(this.delayBeforeRetry);
+                        this.webRequest = CloneHttpWebRequest(this.webRequest);
                         this.InternalGetResponse().ContinueWith(retryGetResponseTask =>
                         {
                             if (retryGetResponseTask.IsFaulted)
@@ -663,5 +664,27 @@ namespace Microsoft.Xbox.Services
             }
         }
 
+        public static HttpWebRequest CloneHttpWebRequest(HttpWebRequest original)
+        {
+            HttpWebRequest clone = (HttpWebRequest)WebRequest.Create(original.RequestUri.AbsoluteUri);
+            PropertyInfo[] properties = original.GetType().GetProperties(BindingFlags.Public | BindingFlags.Instance);
+            foreach (PropertyInfo property in properties)
+            {
+                if (property.Name != "ContentLength" && property.Name != "Headers")
+                {
+                    object value = property.GetValue(original);
+                    if (property.CanWrite)
+                    {
+                        property.SetValue(clone, value);
+                    }
+                }
+            }
+            foreach (var item in original.Headers.AllKeys)
+            {
+                clone.Headers[item] = original.Headers[item];
+            }
+
+            return clone;
+        }
     }
 }
