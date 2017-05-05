@@ -12,6 +12,7 @@ namespace UWPIntegration
 
     using Microsoft.Xbox;
     using Microsoft.Xbox.Services;
+    using Microsoft.Xbox.Services.Privacy;
     using Microsoft.Xbox.Services.Leaderboard;
     using Microsoft.Xbox.Services.Social.Manager;
     using Microsoft.Xbox.Services.Stats.Manager;
@@ -127,6 +128,28 @@ namespace UWPIntegration
         {
             if (!this.User.IsSignedIn) return;
             this.StatsManager.RequestFlushToService(this.User);
+        }
+
+        private async void CheckPermissions_Click(object sender, RoutedEventArgs e)
+        {
+            if (!this.User.IsSignedIn) return;
+
+            var result = await this.User.Services.PrivacyService.CheckPermissionWithTargetUserAsync(PermissionIdConstants.ViewTargetVideoHistory, "2814680291986301");
+        }
+
+        private async void CheckMultiplePermissions_Click(object sender, RoutedEventArgs e)
+        {
+            if (!this.User.IsSignedIn) return;
+
+            List<string> permissionIds = new List<string>();
+            permissionIds.Add(PermissionIdConstants.ViewTargetVideoHistory);
+            permissionIds.Add(PermissionIdConstants.ViewTargetMusicStatus);
+            permissionIds.Add(PermissionIdConstants.ViewTargetGameHistory);
+
+            List<string> xuids = new List<string>();
+            xuids.Add("2814680291986301");
+            xuids.Add("2814634309691161");
+            var result = await this.User.Services.PrivacyService.CheckMultiplePermissionsWithMultipleTargetUsersAsync(permissionIds, xuids);
         }
 
         private void WriteSocialStats_Click(object sender, RoutedEventArgs e)
