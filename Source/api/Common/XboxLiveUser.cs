@@ -119,6 +119,11 @@ namespace Microsoft.Xbox.Services
             return this.userImpl.InternalGetTokenAndSignatureAsync(httpMethod, url, headers, body, false, false);
         }
 
+        public Task RefreshToken()
+        {
+            return this.userImpl.InternalGetTokenAndSignatureAsync("GET", this.userImpl.AuthConfig.XboxLiveEndpoint, null, null, false, true);
+        }
+
         protected static void OnSignInCompleted(IXboxLiveUser user)
         {
             var handler = InternalSignInCompleted;

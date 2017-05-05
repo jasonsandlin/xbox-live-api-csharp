@@ -11,9 +11,11 @@ namespace Microsoft.Xbox.Services
 
     public class XboxLiveHttpResponse
     {
-        public long RetryAfterInSeconds { get; private set; }
+        public TimeSpan RetryAfter { get; private set; }
 
-        public string ResponseDate { get; private set; }
+        public DateTime ResponseReceivedTime { get; private set; }
+
+        public DateTime RequestStartTime { get; private set; }
 
         public string ETag { get; private set; }
 
@@ -29,15 +31,50 @@ namespace Microsoft.Xbox.Services
 
         public string ResponseBodyString { get; private set; }
 
-        public HttpWebResponse response;
+        public HttpWebResponse response { get; private set; }
+
+        public string XboxUserId { get; private set; }
+
+        public XboxLiveSettings ContextSettings { get; private set; }
+
+        public string Url { get; private set; }
+
+        public XboxLiveAPIName XboxLiveAPI { get; private set; }
+
+        public string Method { get; private set; }
+
+        public string RequestBody { get; private set; }
+
+        public HttpCallResponseBodyType ResponseBodyType { get; private set; }
 
         internal XboxLiveHttpResponse()
         {
         }
 
-        internal XboxLiveHttpResponse(HttpWebResponse response)
+        internal XboxLiveHttpResponse(
+            HttpWebResponse response, 
+            DateTime responseReceivedTime, 
+            DateTime requestStartTime,
+            string xboxUserId,
+            XboxLiveSettings contextSettings,                        
+            string url,
+            XboxLiveAPIName xboxLiveAPI,
+            string method,
+            string requestBody,
+            HttpCallResponseBodyType responseBodyType
+            )
         {
             this.response = response;
+            this.ResponseReceivedTime = responseReceivedTime;
+            this.RequestStartTime = requestStartTime;
+            this.XboxUserId = xboxUserId;
+            this.ContextSettings = contextSettings;
+            this.Url = url;
+            this.XboxLiveAPI = xboxLiveAPI;
+            this.Method = method;
+            this.RequestBody = requestBody;
+            this.ResponseBodyType = responseBodyType;
+
             using (Stream body = response.GetResponseStream())
             {
                 this.Initialize((int)response.StatusCode, body, response.ContentLength, "utf-8", response.Headers);
@@ -67,23 +104,26 @@ namespace Microsoft.Xbox.Services
                     totalBytesRead += bytesRead;
                 }
                 while (totalBytesRead < contentLength);
-                
 
-                Encoding encoding;
-                switch (characterSet.ToLower())
+
+                if (this.ResponseBodyType != HttpCallResponseBodyType.VectorBody)
                 {
-                    case "utf-8":
-                        encoding = Encoding.UTF8;
-                        break;
-                    case "ascii":
-                        encoding = Encoding.ASCII;
-                        break;
-                    default:
-                        encoding = Encoding.UTF8;
-                        break;
-                }
+                    Encoding encoding;
+                    switch (characterSet.ToLower())
+                    {
+                        case "utf-8":
+                            encoding = Encoding.UTF8;
+                            break;
+                        case "ascii":
+                            encoding = Encoding.ASCII;
+                            break;
+                        default:
+                            encoding = Encoding.UTF8;
+                            break;
+                    }
 
-                this.ResponseBodyString = encoding.GetString(this.ResponseBodyVector);
+                    this.ResponseBodyString = encoding.GetString(this.ResponseBodyVector);
+                }
             }
 
             for (int i = 0; i < headers.Count; ++i)
@@ -94,3 +134,4 @@ namespace Microsoft.Xbox.Services
         }
     }
 }
+

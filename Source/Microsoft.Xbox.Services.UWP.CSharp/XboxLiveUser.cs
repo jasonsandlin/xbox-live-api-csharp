@@ -31,11 +31,6 @@ namespace Microsoft.Xbox.Services
             this.userImpl = user;
         }
 
-        public Task RefreshToken()
-        {
-            return this.userImpl.InternalGetTokenAndSignatureAsync("GET", this.userImpl.AuthConfig.XboxLiveEndpoint, null, null, false, true);
-        }
-
         public Windows.System.User WindowsSystemUser
         {
             get

@@ -130,7 +130,8 @@ namespace Microsoft.Xbox.Services.TitleStorage
                 var httpRequest = XboxLiveHttpRequest.Create(HttpMethod.Get, TitleStorageBaseUri.ToString(), subPathAndQueryResult);
                 httpRequest.ContractVersion = TitleStorageApiContract;
                 httpRequest.ContentType = ContentTypeHeaderValue;
-                httpRequest.longHttpCall = true;
+                httpRequest.LongHttpCall = true;
+                httpRequest.ResponseBodyType = HttpCallResponseBodyType.VectorBody;
 
                 SetEtagHeader(httpRequest, blobMetadata.ETag, blobQueryProperties.ETagMatchCondition);
 
@@ -221,7 +222,7 @@ namespace Microsoft.Xbox.Services.TitleStorage
                 var httpRequest = XboxLiveHttpRequest.Create(HttpMethod.Put, TitleStorageBaseUri.ToString(), subpathAndQueryResult);
                 httpRequest.ContractVersion = TitleStorageApiContract;
                 httpRequest.ContentType = ContentTypeHeaderValue;
-                httpRequest.longHttpCall = true;
+                httpRequest.LongHttpCall = true;
 
                 SetEtagHeader(httpRequest, blobMetadata.ETag, blobQueryProperties.ETagMatchCondition);
                 var encoding = Encoding.UTF8;

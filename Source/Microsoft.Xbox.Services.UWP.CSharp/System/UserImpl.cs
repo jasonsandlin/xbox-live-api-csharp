@@ -102,7 +102,7 @@ namespace Microsoft.Xbox.Services.System
 
             if (string.IsNullOrEmpty(result.Token))
             {
-                // todo: set presence
+                // TODO: set presence
             }
 
             this.UserSignedIn(result.XboxUserId, result.Gamertag, result.AgeGroup, result.Privileges, result.WebAccountId);

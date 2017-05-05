@@ -1,15 +1,19 @@
 // Copyright (c) Microsoft Corporation
 // Licensed under the MIT license. See LICENSE file in the project root for full license information.
 // 
+
 namespace Microsoft.Xbox.Services
 {
     using global::System;
+    using global::System.Diagnostics;
     using global::System.Collections.Generic;
     using global::System.Globalization;
     using global::System.IO;
     using global::System.Net;
     using global::System.Reflection;
+    using global::System.Runtime.InteropServices;
     using global::System.Text;
+    using global::System.Threading;
     using global::System.Threading.Tasks;
 
     public class XboxLiveHttpRequest
@@ -18,20 +22,22 @@ namespace Microsoft.Xbox.Services
         private const string SignatureHeaderName = "Signature";
         private const string RangeHeaderName = "Range";
         private const string ContentLengthHeaderName = "Content-Length";
-
-        private readonly XboxLiveSettings contextSettings;
-        internal readonly HttpWebRequest webRequest;
-        internal readonly Dictionary<string, string> customHeaders = new Dictionary<string, string>();
-
-        internal bool longHttpCall;
+        private const double DefaultHttpTimeoutSeconds = 30.0;
+        private const double MinHttpTimeoutSeconds = 5.0;
+        private const int HttpStatusCodeTooManyRequests = 429;
+        private const double MaxDelayTimeInSec = 60.0;
+        private const int MinDelayForHttpInternalErrorInSec = 10;
+        private static string userAgentVersion;
 
         internal XboxLiveHttpRequest(string method, string serverName, string pathQueryFragment)
         {
+            this.iterationNumber = 0;
             this.Method = method;
             this.Url = serverName + pathQueryFragment;
             this.contextSettings = XboxLive.Instance.Settings;
             this.webRequest = (HttpWebRequest)WebRequest.Create(new Uri(this.Url));
             this.webRequest.Method = method;
+            this.ResponseBodyType = HttpCallResponseBodyType.StringBody;
 
             this.SetCustomHeader("Accept-Language", CultureInfo.CurrentUICulture + "," + CultureInfo.CurrentUICulture.TwoLetterISOLanguageName);
 #if WINDOWS_UWP
@@ -41,23 +47,27 @@ namespace Microsoft.Xbox.Services
 #endif
             this.SetCustomHeader("Cache-Control", "no-cache");
             this.ContentType = "application/json; charset=utf-8";
-
-            const string userAgentType = "XboxServicesAPI";
-#if !WINDOWS_UWP
-            string userAgentVersion = typeof(XboxLiveHttpRequest).Assembly.GetName().Version.ToString();
-#else
-            string userAgentVersion = typeof(XboxLiveHttpRequest).GetTypeInfo().Assembly.GetName().Version.ToString();
-#endif
-            this.SetCustomHeader("UserAgent", userAgentType + "/" + userAgentVersion);
         }
 
-        public string Method { get; set; }
+        internal readonly XboxLiveSettings contextSettings;
+        internal readonly HttpWebRequest webRequest;
+        internal readonly Dictionary<string, string> customHeaders = new Dictionary<string, string>();
+        internal bool hasPerformedRetryOn401 { get; set; }
+        internal uint iterationNumber { get; set; }
+        internal DateTime firstCallStartTime { get; set; }
+        internal TimeSpan delayBeforeRetry { get; set; }
 
-        public string Url { get; set; }
-
+        public bool LongHttpCall { get; set; }
+        public string Method { get; private set; }
+        public string Url { get; private set; }
         public string ContractVersion { get; set; }
-
         public bool RetryAllowed { get; set; }
+        public string ContentType { get; set; }
+        public string RequestBody { get; set; }
+        public HttpCallResponseBodyType ResponseBodyType { get; set; }
+        public XboxLiveUser User { get; private set; }
+        public XboxLiveAPIName XboxLiveAPI { get; private set; }
+        public string CallerContext { get; set; }
 
         private string Headers
         {
@@ -82,52 +92,54 @@ namespace Microsoft.Xbox.Services
             }
         }
 
-        public string ContentType { get; set; }
-
-        public string RequestBody { get; set; }
-
         public Task<XboxLiveHttpResponse> GetResponseWithAuth(XboxLiveUser user)
         {
-            TaskCompletionSource<XboxLiveHttpResponse> getResponseCompletionSource = new TaskCompletionSource<XboxLiveHttpResponse>();
+            TaskCompletionSource<XboxLiveHttpResponse> taskCompletionSource = new TaskCompletionSource<XboxLiveHttpResponse>();
+            this.User = user;
 
             user.GetTokenAndSignatureAsync(this.Method, this.Url, this.Headers).ContinueWith(
                 tokenTask =>
                 {
                     if (tokenTask.IsFaulted)
                     {
-                        getResponseCompletionSource.SetException(tokenTask.Exception);
+                        taskCompletionSource.SetException(tokenTask.Exception);
                         return;
                     }
 
-                    var result = tokenTask.Result;
-#if !WINDOWS_UWP
-                    this.SetCustomHeader(AuthorizationHeaderName, string.Format("XBL3.0 x={0};{1}", result.XboxUserHash, result.Token));
-#else
-                    this.SetCustomHeader(AuthorizationHeaderName, string.Format("{0}", result.Token));               
-#endif
-                    this.SetCustomHeader(SignatureHeaderName, tokenTask.Result.Signature);
                     try
                     {
-                        this.GetResponseWithoutAuth().ContinueWith(getResponseTask =>
+                        this.SetAuthHeaders(tokenTask.Result);
+                        this.SetRequestHeaders();
+                        this.InternalGetResponse().ContinueWith(getResponseTask =>
                         {
                             if (getResponseTask.IsFaulted)
                             {
-                                getResponseCompletionSource.SetException(getResponseTask.Exception);
+                                taskCompletionSource.SetException(getResponseTask.Exception);
                             }
 
-                            getResponseCompletionSource.SetResult(getResponseTask.Result);
+                            taskCompletionSource.SetResult(getResponseTask.Result);
                         });
                     }
                     catch (Exception e)
                     {
-                        getResponseCompletionSource.SetException(e);
+                        taskCompletionSource.SetException(e);
                     }
                 });
 
-            return getResponseCompletionSource.Task;
+            return taskCompletionSource.Task;
         }
 
-        public virtual Task<XboxLiveHttpResponse> GetResponseWithoutAuth()
+        private void SetAuthHeaders(TokenAndSignatureResult result)
+        {
+#if !WINDOWS_UWP
+            this.SetCustomHeader(AuthorizationHeaderName, string.Format("XBL3.0 x={0};{1}", result.XboxUserHash, result.Token));
+#else
+            this.SetCustomHeader(AuthorizationHeaderName, string.Format("{0}", result.Token));
+#endif
+            this.SetCustomHeader(SignatureHeaderName, result.Signature);
+        }
+
+        private void SetRequestHeaders()
         {
             if (!string.IsNullOrEmpty(this.ContractVersion))
             {
@@ -138,34 +150,422 @@ namespace Microsoft.Xbox.Services
             {
                 this.webRequest.Headers[customHeader.Key] = customHeader.Value;
             }
-            #if !UNITY
-            if (this.longHttpCall)
-            {
-                this.webRequest.ContinueTimeout = this.contextSettings.LongHttpTimeout.Milliseconds;
-            }
-            #endif
+        }
 
-            TaskCompletionSource<XboxLiveHttpResponse> getResponseCompletionSource = new TaskCompletionSource<XboxLiveHttpResponse>();
+        public virtual Task<XboxLiveHttpResponse> GetResponseWithoutAuth()
+        {
+            this.SetRequestHeaders();
+            return this.InternalGetResponse();
+        }
+
+        private void HandleThrottledCalls(XboxLiveHttpResponse httpCallResponse)
+        {
+            if (string.Equals(XboxLiveAppConfiguration.Instance.Sandbox, "RETAIL", StringComparison.Ordinal) ||
+                this.contextSettings.AreAssertsForThrottlingInDevSandboxesDisabled)
+                return;
+
+#if DEBUG
+            string msg;
+            msg = "Xbox Live service call to " + httpCallResponse.Url.ToString() + " was throttled";
+            msg += httpCallResponse.RequestBody;
+            msg += "You can temporarily disable the assert by calling";
+            msg += "XboxLiveSettings.DisableAssertsForXboxLiveThrottlingInDevSandboxes";
+            msg += "Note that this will only disable this assert.  You will still be throttled in all sandboxes.";
+            Debug.WriteLine(msg);
+#endif
+
+            throw new XboxException("Xbox Live service call was throttled.  See Output for more detail");
+        }
+
+        private void HandleRetryLogic(HttpRetryAfterApiState apiState, DateTime requestStartTime, out bool shouldFastFail)
+        {
+            shouldFastFail = false;
+
+            uint waitTimeInMilliseconds = 0;
+            if (this.ShouldFastFail(apiState, requestStartTime, out waitTimeInMilliseconds))
+            {
+                shouldFastFail = true; // should fast fail
+            }
+            else
+            {
+                if (waitTimeInMilliseconds > 0)
+                {
+                    // only allow a single call per endpoint to wait for the HTTP 429: TOO MANY REQUESTS to expire, and fast fail the rest
+                    if (!apiState.IsCallWaiting)
+                    {
+                        apiState.IsCallWaiting = true;
+                        HttpRetryAfterManager.Instance.SetState(this.XboxLiveAPI, apiState);
+                        this.Sleep(TimeSpan.FromMilliseconds(waitTimeInMilliseconds));
+                        HttpRetryAfterManager.Instance.ClearState(this.XboxLiveAPI);
+                    }
+                    else
+                    {
+                        shouldFastFail = true; // should fast fail
+                    }
+                }
+                else
+                {
+                    HttpRetryAfterManager.Instance.ClearState(this.XboxLiveAPI);
+                }
+            }
+        }
+
+        private Task<XboxLiveHttpResponse> InternalGetResponse()
+        {
+            DateTime requestStartTime = DateTime.UtcNow;
+            if (this.iterationNumber == 0)
+            {
+                this.firstCallStartTime = requestStartTime;
+            }
+            this.iterationNumber++;
+
+            HttpRetryAfterApiState apiState = HttpRetryAfterManager.Instance.GetState(this.XboxLiveAPI);
+            if (apiState.Exception != null)
+            {
+                bool shouldFastFail = false;
+                this.HandleRetryLogic(apiState, requestStartTime, out shouldFastFail);
+
+                if( shouldFastFail )
+                {
+                    return this.HandleFastFail(apiState);
+                }
+            }
+
+            this.SetHttpTimeout();
+            this.SetConfig();
+            this.SetUserAgent();
+
+            TaskCompletionSource<XboxLiveHttpResponse> taskCompletionSource = new TaskCompletionSource<XboxLiveHttpResponse>();
 
             this.WriteRequestBodyAsync().ContinueWith(writeBodyTask =>
             {
                 // The explicit cast in the next method should not be necessary, but Visual Studio is complaining
                 // that the call is ambiguous.  This removes that in-editor error. 
                 Task.Factory.FromAsync(this.webRequest.BeginGetResponse, (Func<IAsyncResult, WebResponse>)this.webRequest.EndGetResponse, null)
-                    .ContinueWith(getResponseTask =>
-                    {
-                        if (getResponseTask.IsFaulted)
-                        {
-                            getResponseCompletionSource.SetException(getResponseTask.Exception);
-                            return;
-                        }
+                .ContinueWith(getResponseTask =>
+                {
+                    var httpCallResponse = new XboxLiveHttpResponse(
+                        (HttpWebResponse)getResponseTask.Result,
+                        DateTime.UtcNow,
+                        requestStartTime,
+                        this.User != null ? this.User.XboxUserId : "",
+                        this.contextSettings,
+                        this.Url,
+                        this.XboxLiveAPI,
+                        this.Method,
+                        this.RequestBody,
+                        this.ResponseBodyType
+                        );
 
-                        var response = new XboxLiveHttpResponse((HttpWebResponse)getResponseTask.Result);
-                        getResponseCompletionSource.SetResult(response);
-                    });
+                    bool shouldRetry = this.ShouldRetry(httpCallResponse);
+                    if (shouldRetry)
+                    {
+                        // Wait and retry call
+                        this.RouteServiceCall();
+                        this.Sleep(this.delayBeforeRetry);
+                        this.InternalGetResponse().ContinueWith(retryGetResponseTask =>
+                        {
+                            if (retryGetResponseTask.IsFaulted)
+                            {
+                                taskCompletionSource.SetException(retryGetResponseTask.Exception);
+                            }
+
+                            taskCompletionSource.SetResult(retryGetResponseTask.Result);
+                        });
+                    }
+                    else if (!getResponseTask.IsFaulted)
+                    {
+                        // HTTP 429: TOO MANY REQUESTS errors should return a JSON debug payload 
+                        // describing the details about why the call was throttled
+                        this.RouteServiceCall();
+
+                        if (httpCallResponse.HttpStatus == HttpStatusCodeTooManyRequests) 
+                        {
+                            this.HandleThrottledCalls(httpCallResponse);
+                        }
+                        taskCompletionSource.SetResult(httpCallResponse);
+                    }
+                    else
+                    {
+                        // Handle network errors when there's no retry
+                        taskCompletionSource.SetException(getResponseTask.Exception);
+
+                        // TODO: [JS] error handling 
+                        // handle_response_error(httpCallResponse, networkError, errMessage, httpResponse);
+                        this.RouteServiceCall();
+                        taskCompletionSource.SetResult(httpCallResponse);
+                    }
+                });
             });
 
-            return getResponseCompletionSource.Task;
+            return taskCompletionSource.Task;
+        }
+
+        private bool ShouldFastFail(
+            HttpRetryAfterApiState apiState,
+            DateTime currentTime,
+            out uint waitTimeInMilliseconds
+            )
+        {
+            waitTimeInMilliseconds = 0;
+
+            if (apiState.Exception == null)
+            {
+                return false;
+            }
+
+            TimeSpan remainingTimeBeforeRetryAfter = apiState.RetryAfterTime - currentTime;
+            if (remainingTimeBeforeRetryAfter.Ticks <= 0)
+            {
+                return false;
+            }
+
+            DateTime timeoutTime = this.firstCallStartTime + this.contextSettings.HttpTimeoutWindow;
+
+            // If the Retry-After will happen first, just wait till Retry-After is done, and don't fast fail
+            if (apiState.RetryAfterTime < timeoutTime)
+            {
+                this.Sleep(remainingTimeBeforeRetryAfter);
+                return false;
+            }
+            else
+            {
+                return true;
+            }
+        }
+
+        private Task<XboxLiveHttpResponse> HandleFastFail( HttpRetryAfterApiState apiState )
+        {
+            //auto httpCallResponse = get_http_call_response(httpCallData, http_response());
+
+            //httpCallResponse->_Set_error_info(apiState.errCode, apiState.errMessage);
+            this.RouteServiceCall();
+            //return pplx::task_from_result<std::shared_ptr<http_call_response>>(httpCallResponse);
+            return null;
+        }
+
+
+        private void SetHttpTimeout()
+        {
+#if !UNITY
+            if (this.LongHttpCall)
+            {
+                // Long calls such as Title Storage upload/download ignore HttpTimeoutWindow so they act as expected with 
+                // requiring the game developer to manually adjust HttpTimeoutWindow before calling them.
+
+                // TODO
+                //this.webRequest.Timeout = this.contextSettings.LongHttpTimeout.Milliseconds;
+            }
+            else
+            {
+                // For all other calls, set the timeout to be how much time left before hitting the HttpTimeoutWindow setting with a min of 5 seconds
+                DateTime currentTime = DateTime.UtcNow;
+                TimeSpan timeElapsedSinceFirstCall = currentTime - this.firstCallStartTime;
+                TimeSpan remainingTimeBeforeTimeout = this.contextSettings.HttpTimeoutWindow - timeElapsedSinceFirstCall;
+                double secondsLeft = Math.Min(DefaultHttpTimeoutSeconds, remainingTimeBeforeTimeout.TotalSeconds);
+                double secondsLeftCapped = Math.Max(MinHttpTimeoutSeconds, secondsLeft);
+                int millisecondsLeft = (int)(secondsLeftCapped * 1000.0);
+
+                // TODO
+                //this.webRequest.Timeout = millisecondsLeft;
+            }
+#endif
+        }
+
+        private void SetUserAgent()
+        {
+            const string userAgentType = "XboxServicesAPI";
+            lock (userAgentVersion)
+            {
+                if (string.IsNullOrEmpty(userAgentVersion))
+                {
+#if !WINDOWS_UWP
+                    userAgentVersion = typeof(XboxLiveHttpRequest).Assembly.GetName().Version.ToString();
+#else
+                    userAgentVersion = typeof(XboxLiveHttpRequest).GetTypeInfo().Assembly.GetName().Version.ToString();
+#endif
+                }
+            }
+
+            string userAgent = userAgentType + "/" + userAgentVersion;
+            if (!string.IsNullOrEmpty(this.CallerContext)) // TODO: set in SM, etc
+            {
+                userAgent += " " + this.CallerContext;
+            }
+            this.SetCustomHeader("UserAgent", userAgent);
+        }
+
+        private void HandleResponseError()
+        {
+            // TODO: [JS] pull out error message from HTTP response
+            //xbox_live_error_code errFromStatus = get_xbox_live_error_code_from_http_status(response.status_code());
+            //std::error_code errCode;
+            //std::string errMessage;
+            //if (errFromStatus == xbox_live_error_code::no_error)
+            //{
+            //    errCode = std::make_error_code(errFromException);
+            //    errMessage = errMessageFromException;
+            //}
+            //else
+            //{
+            //    errCode = std::make_error_code(errFromStatus);
+            //    stringstream_t errorMessageHttp;
+            //    errorMessageHttp << _T("http error: ") << errCode.message().c_str();
+            //    errMessage = utility::conversions::to_utf8string(errorMessageHttp.str().c_str());
+            //}
+
+            //// Try to pull out error message from HTTP response
+            //try
+            //{
+            //    if (response.body().is_valid())
+            //    {
+            //        string_t debugString = response.extract_string().get();
+            //        if (!debugString.empty())
+            //        {
+            //            std::string debugStringUtf8 = utility::conversions::to_utf8string(debugString);
+            //            errMessage += " HTTP Response Body: ";
+            //            errMessage += debugStringUtf8;
+            //        }
+            //    }
+            //}
+            //catch (...)
+            //    {
+            //}
+
+            //httpCallResponse->_Set_error_info(errCode, errMessage);
+        }
+
+        private void SetConfig()
+        {
+            // TODO?: set proxy
+            //http_client_config config;
+            //config.set_timeout(httpCallData->httpTimeout);
+            //auto proxyUri = xbox_live_app_config::get_app_config_singleton()->_Proxy();
+            //if (!proxyUri.is_empty())
+            //{
+            //    web::web_proxy proxy(proxyUri);
+            //    config.set_proxy(proxy);
+            //}
+        }
+
+        private bool ShouldRetry(XboxLiveHttpResponse httpCallResponse)
+        {
+            int httpStatus = httpCallResponse.HttpStatus;
+
+            if (!this.RetryAllowed && 
+                !(httpStatus == (int)HttpStatusCode.Unauthorized && this.User != null))
+            {
+                return false;
+            }
+
+            if ((httpStatus == (int)HttpStatusCode.Unauthorized && !this.hasPerformedRetryOn401) ||
+                httpStatus == (int)HttpStatusCode.RequestTimeout ||
+                httpStatus == HttpStatusCodeTooManyRequests ||
+                httpStatus == (int)HttpStatusCode.InternalServerError ||
+                httpStatus == (int)HttpStatusCode.BadGateway ||
+                httpStatus == (int)HttpStatusCode.ServiceUnavailable ||
+                httpStatus == (int)HttpStatusCode.GatewayTimeout 
+                // || httpNetworkError != xbox_live_error_code::no_error // TODO
+                )
+            {
+                TimeSpan retryAfter = httpCallResponse.RetryAfter;
+
+                // Compute how much time left before hitting the HttpTimeoutWindow setting.  
+                TimeSpan timeElapsedSinceFirstCall = httpCallResponse.ResponseReceivedTime - this.firstCallStartTime;
+                TimeSpan remainingTimeBeforeTimeout = this.contextSettings.HttpTimeoutWindow - timeElapsedSinceFirstCall;
+                if (remainingTimeBeforeTimeout.TotalSeconds <= MinHttpTimeoutSeconds) // Need at least 5 seconds to bother making a call
+                {
+                    return false;
+                }
+
+                // Based on the retry iteration, delay 2,4,8,16,etc seconds by default between retries
+                // Jitter the response between the current and next delay based on system clock
+                // Max wait time is 1 minute
+                double secondsToWaitMin = Math.Pow(this.contextSettings.HttpRetryDelay.TotalSeconds, this.iterationNumber);
+                double secondsToWaitMax = Math.Pow(this.contextSettings.HttpRetryDelay.TotalSeconds, this.iterationNumber + 1);
+                double secondsToWaitDelta = secondsToWaitMax - secondsToWaitMin;
+                DateTime responseDate = httpCallResponse.ResponseReceivedTime;
+                double randTime =
+                    (httpCallResponse.ResponseReceivedTime.Minute * 60.0 * 1000.0) +
+                    (httpCallResponse.ResponseReceivedTime.Second * 1000.0) +
+                    httpCallResponse.ResponseReceivedTime.Millisecond;
+                double lerpScaler = (randTime % 10000) / 10000.0; // from 0 to 1 based on clock
+
+                // TODO: port
+                // #if UNIT_TEST_SERVICES
+                // lerpScaler = 0; // make unit tests deterministic
+                // #endif
+
+                double secondsToWaitUncapped = secondsToWaitMin + secondsToWaitDelta * lerpScaler; // lerp between min & max wait
+                double millisecondsToWait = Math.Min(secondsToWaitUncapped, MaxDelayTimeInSec) * 1000.0; // cap max wait to 1 min
+                TimeSpan waitTime = TimeSpan.FromMilliseconds(millisecondsToWait);
+                if (retryAfter.TotalMilliseconds > 0)
+                {
+                    // Use either the waitTime or Retry-After header, whichever is bigger
+                    this.delayBeforeRetry = (waitTime > retryAfter) ? waitTime : retryAfter;
+                }
+                else
+                {
+                    this.delayBeforeRetry = waitTime;
+                }
+
+                if (remainingTimeBeforeTimeout < this.delayBeforeRetry + TimeSpan.FromSeconds(MinHttpTimeoutSeconds))
+                {
+                    // Don't bother retrying when out of time
+                    return false;
+                }
+                
+                if (httpStatus == (int)HttpStatusCode.InternalServerError)
+                {
+                    // For 500 - Internal Error, wait at least 10 seconds before retrying.
+                    TimeSpan minDelayForHttpInternalError = TimeSpan.FromSeconds(MinDelayForHttpInternalErrorInSec);
+                    if (this.delayBeforeRetry < minDelayForHttpInternalError)
+                    {
+                        this.delayBeforeRetry = minDelayForHttpInternalError;
+                    }
+                }
+                else if (httpStatus == (int)HttpStatusCode.Unauthorized)
+                {
+                    return this.HandleUnauthorizedError();
+                }
+
+                return true;
+            }
+
+            return false;
+        }
+
+        private bool HandleUnauthorizedError()
+        {
+            if (this.User != null) // if this is null, it does not need a valid token anyways
+            {
+                try
+                {
+                    // TODO: await 
+                    this.User.RefreshToken();
+                    this.hasPerformedRetryOn401 = true;
+                }
+                catch (Exception)
+                {
+                    return false; // if getting a new token failed, then we need to just return the 401 upwards
+                }
+            }
+            else
+            {
+                this.hasPerformedRetryOn401 = true;
+            }
+
+            return true;
+        }
+
+        private void HandleFastFail()
+        {
+            // TODO: [JS] handle fast fail
+            //auto httpCallResponse = get_http_call_response(httpCallData, http_response());
+
+            //httpCallResponse->_Set_error_info(apiState.errCode, apiState.errMessage);
+            this.RouteServiceCall();
+            //return pplx::task_from_result<std::shared_ptr<http_call_response>>(httpCallResponse);
         }
 
         /// <summary>
@@ -233,6 +633,7 @@ namespace Microsoft.Xbox.Services
                 this.webRequest.Headers[RangeHeaderName] = byteRange;
 #endif
         }
+
         /// <summary>
         /// Creates a query string out of a list of parameters
         /// </summary>
@@ -260,5 +661,44 @@ namespace Microsoft.Xbox.Services
             return queryString.ToString();
         }
 
+        // TODO?: port?
+        //void utils::generate_locales()
+        //{
+        //    std::vector<string_t> localeList = get_locale_list();
+        //    std::vector<string_t> localeFallbackList;
+        //    for (auto & locale : localeList)
+        //    {
+        //        // Build up fallback list, for instance, if the lang is "sd-Arab-PK"
+        //        // We add "sd-Arab" and "sd" as well 
+        //        // So that if an user's language preference is "fr-ml", "zh-hans", "en-us"
+        //        // fallback chain is going to be:
+        //        // fr-ml -> fr -> zh-hans -> zh -> en-us -> en
+        //        localeFallbackList.push_back(locale);
+        //        size_t nPos = locale.rfind(_T("-"));
+        //        while (nPos != string_t::npos)
+        //        {
+        //            localeFallbackList.push_back(locale.substr(0, nPos));
+        //            nPos = locale.rfind(_T("-"), nPos - 1);
+        //        }
+        //    }
+        //    s_locales.clear();
+        //    for (auto & locale : localeFallbackList)
+        //    {
+        //        s_locales += locale;
+        //        s_locales += _T(',');
+        //    }
+        //    // erase the last ','
+        //    s_locales.pop_back();
+        //}
+
+        private void RouteServiceCall()
+        {
+            // TODO: port   
+        }
+
+        public void Sleep(TimeSpan timeSpan)
+        {
+            Task.Delay(timeSpan);
+        }
     }
 }

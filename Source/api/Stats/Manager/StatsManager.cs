@@ -14,8 +14,8 @@ namespace Microsoft.Xbox.Services.Stats.Manager
     public class StatsManager : IStatsManager
     {
         private static readonly object instanceLock = new object();
-        private static readonly TimeSpan TimePerCall = new TimeSpan(0, 0, 30);
-        private static readonly TimeSpan StatsPollTime = new TimeSpan(0, 5, 0);
+        private static readonly TimeSpan TimePerCall = TimeSpan.FromSeconds(30);
+        private static readonly TimeSpan StatsPollTime = TimeSpan.FromMinutes(5);
         private static IStatsManager instance;
 
         private readonly Dictionary<string, StatsValueDocument> userDocumentMap;
