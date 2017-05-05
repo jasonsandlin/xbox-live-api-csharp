@@ -56,6 +56,7 @@ namespace Microsoft.Xbox.Services.Social.Manager
                 path);
 
             request.ContractVersion = "1";
+            request.XboxLiveAPI = XboxLiveAPIName.GetProfileInfo;
 
             return request.GetResponseWithAuth(user)
                 .ContinueWith(responseTask =>
@@ -112,6 +113,8 @@ namespace Microsoft.Xbox.Services.Social.Manager
                 JObject postBody = new JObject(new JProperty("xuids", xboxLiveUsers));
                 request.RequestBody = postBody.ToString(Formatting.None);
             }
+
+            request.XboxLiveAPI = XboxLiveAPIName.GetSocialGraph;
 
             return request.GetResponseWithAuth(user)
                 .ContinueWith(responseTask =>

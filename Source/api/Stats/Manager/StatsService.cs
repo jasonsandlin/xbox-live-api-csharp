@@ -55,6 +55,7 @@ namespace Microsoft.Xbox.Services.Stats.Manager
                 });
 
             req.RequestBody = JsonConvert.SerializeObject(svdModel, serializerSettings);
+            req.XboxLiveAPI = XboxLiveAPIName.UpdateStatsValueDocument;
             return req.GetResponseWithAuth(user);
         }
 
@@ -67,6 +68,7 @@ namespace Microsoft.Xbox.Services.Stats.Manager
             );
 
             XboxLiveHttpRequest req = XboxLiveHttpRequest.Create(HttpMethod.Get, this.statsReadEndpoint, pathAndQuery);
+            req.XboxLiveAPI = XboxLiveAPIName.GetStatsValueDocument;
             return req.GetResponseWithAuth(user).ContinueWith(task =>
             {
                 if (task.IsFaulted)

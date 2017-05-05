@@ -28,6 +28,7 @@ namespace Microsoft.Xbox.Services.Privacy
                 HttpMethod.Get, 
                 this.privacyEndpoint,
                 string.Format("/users/xuid({0})/permission/validate?setting={1}&target=xuid({2})", user.XboxUserId, permissionId, targetXboxUserId));
+            req.XboxLiveAPI = XboxLiveAPIName.CheckPermissionWithTargetUser;
 
             return req.GetResponseWithAuth(user)
                 .ContinueWith(responseTask =>
@@ -48,6 +49,7 @@ namespace Microsoft.Xbox.Services.Privacy
 
             Models.PrivacySettingsRequest reqBodyObject = new Models.PrivacySettingsRequest(permissionIds, targetXboxUserIds);
             req.RequestBody = JsonSerialization.ToJson(reqBodyObject);
+            req.XboxLiveAPI = XboxLiveAPIName.CheckMultiplePermissionsWithMultipleTargetUsers;
             return req.GetResponseWithAuth(user)
                 .ContinueWith(responseTask =>
                 {

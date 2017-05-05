@@ -40,6 +40,7 @@ namespace Microsoft.Xbox.Services.TitleStorage
             var subQuery = this.GetTitleStorageSubpath(user, storageType);
             var httpRequest = XboxLiveHttpRequest.Create(HttpMethod.Get, TitleStorageBaseUri.ToString(), subQuery);
             httpRequest.ContractVersion = TitleStorageApiContract;
+            httpRequest.XboxLiveAPI = XboxLiveAPIName.GetQuota;
 
             return httpRequest.GetResponseWithAuth(user).ContinueWith(
                 responseTask => this.HandleStorageQuoteResponse(responseTask, storageType));
@@ -83,7 +84,8 @@ namespace Microsoft.Xbox.Services.TitleStorage
             var httpRequest = XboxLiveHttpRequest.Create(HttpMethod.Delete, TitleStorageBaseUri.ToString(), subPathAndQueryResult);
             httpRequest.ContractVersion = TitleStorageApiContract;
             httpRequest.ContentType = ContentTypeHeaderValue;
-            
+            httpRequest.XboxLiveAPI = XboxLiveAPIName.DeleteBlob;
+
             SetEtagHeader(httpRequest, blobMetadata.ETag, eTagMatchCondition);
             return httpRequest.GetResponseWithAuth(user).ContinueWith(responseTask =>
             {
@@ -140,6 +142,7 @@ namespace Microsoft.Xbox.Services.TitleStorage
                     httpRequest.SetRangeHeader(startByte, startByte + preferredDownloadBlockSize);
                 }
 
+                httpRequest.XboxLiveAPI = XboxLiveAPIName.DownloadBlob;
                 httpRequest.GetResponseWithAuth(user).ContinueWith(responseTask =>
                 {
                     var response = responseTask.Result;
@@ -227,6 +230,7 @@ namespace Microsoft.Xbox.Services.TitleStorage
                 SetEtagHeader(httpRequest, blobMetadata.ETag, blobQueryProperties.ETagMatchCondition);
                 var encoding = Encoding.UTF8;
                 httpRequest.RequestBody = encoding.GetString(dataChunk.ToArray());
+                httpRequest.XboxLiveAPI = XboxLiveAPIName.UploadBlob;
 
                 var localIsFinalBlock = isFinalBlock;
                 httpRequest.GetResponseWithAuth(user).ContinueWith(responseTask =>
@@ -276,6 +280,7 @@ namespace Microsoft.Xbox.Services.TitleStorage
 
             var httpRequest = XboxLiveHttpRequest.Create(HttpMethod.Get, TitleStorageBaseUri.ToString(), subPathAndQueryResult);
             httpRequest.ContractVersion = TitleStorageApiContract;
+            httpRequest.XboxLiveAPI = XboxLiveAPIName.GetBlobMetadata;
             return httpRequest.GetResponseWithAuth(user)
                 .ContinueWith(
                 responseTask => this.HandleBlobMetadataResult(user, responseTask, storageType, blobPath));

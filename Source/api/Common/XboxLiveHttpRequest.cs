@@ -66,7 +66,7 @@ namespace Microsoft.Xbox.Services
         public string RequestBody { get; set; }
         public HttpCallResponseBodyType ResponseBodyType { get; set; }
         public XboxLiveUser User { get; private set; }
-        public XboxLiveAPIName XboxLiveAPI { get; private set; }
+        public XboxLiveAPIName XboxLiveAPI { get; set; }
         public string CallerContext { get; set; }
 
         private string Headers
@@ -231,8 +231,6 @@ namespace Microsoft.Xbox.Services
                 }
             }
 
-            this.SetHttpTimeout();
-            this.SetConfig();
             this.SetUserAgent();
 
             TaskCompletionSource<XboxLiveHttpResponse> taskCompletionSource = new TaskCompletionSource<XboxLiveHttpResponse>();
@@ -308,12 +306,14 @@ namespace Microsoft.Xbox.Services
             )
         {
             waitTimeInMilliseconds = 0;
+            // TODO: set waitTimeInMilliseconds
 
             if (apiState.Exception == null)
             {
                 return false;
             }
 
+            // TODO: set apiState.RetryAfterTime
             TimeSpan remainingTimeBeforeRetryAfter = apiState.RetryAfterTime - currentTime;
             if (remainingTimeBeforeRetryAfter.Ticks <= 0)
             {
@@ -336,40 +336,13 @@ namespace Microsoft.Xbox.Services
 
         private Task<XboxLiveHttpResponse> HandleFastFail( HttpRetryAfterApiState apiState )
         {
+            // TODO: [JS] handle fast fail
             //auto httpCallResponse = get_http_call_response(httpCallData, http_response());
 
             //httpCallResponse->_Set_error_info(apiState.errCode, apiState.errMessage);
             this.RouteServiceCall();
             //return pplx::task_from_result<std::shared_ptr<http_call_response>>(httpCallResponse);
             return null;
-        }
-
-
-        private void SetHttpTimeout()
-        {
-#if !UNITY
-            if (this.LongHttpCall)
-            {
-                // Long calls such as Title Storage upload/download ignore HttpTimeoutWindow so they act as expected with 
-                // requiring the game developer to manually adjust HttpTimeoutWindow before calling them.
-
-                // TODO
-                //this.webRequest.Timeout = this.contextSettings.LongHttpTimeout.Milliseconds;
-            }
-            else
-            {
-                // For all other calls, set the timeout to be how much time left before hitting the HttpTimeoutWindow setting with a min of 5 seconds
-                DateTime currentTime = DateTime.UtcNow;
-                TimeSpan timeElapsedSinceFirstCall = currentTime - this.firstCallStartTime;
-                TimeSpan remainingTimeBeforeTimeout = this.contextSettings.HttpTimeoutWindow - timeElapsedSinceFirstCall;
-                double secondsLeft = Math.Min(DefaultHttpTimeoutSeconds, remainingTimeBeforeTimeout.TotalSeconds);
-                double secondsLeftCapped = Math.Max(MinHttpTimeoutSeconds, secondsLeft);
-                int millisecondsLeft = (int)(secondsLeftCapped * 1000.0);
-
-                // TODO
-                //this.webRequest.Timeout = millisecondsLeft;
-            }
-#endif
         }
 
         private void SetUserAgent()
@@ -433,19 +406,6 @@ namespace Microsoft.Xbox.Services
             //}
 
             //httpCallResponse->_Set_error_info(errCode, errMessage);
-        }
-
-        private void SetConfig()
-        {
-            // TODO?: set proxy
-            //http_client_config config;
-            //config.set_timeout(httpCallData->httpTimeout);
-            //auto proxyUri = xbox_live_app_config::get_app_config_singleton()->_Proxy();
-            //if (!proxyUri.is_empty())
-            //{
-            //    web::web_proxy proxy(proxyUri);
-            //    config.set_proxy(proxy);
-            //}
         }
 
         private bool ShouldRetry(XboxLiveHttpResponse httpCallResponse)
@@ -558,16 +518,6 @@ namespace Microsoft.Xbox.Services
             return true;
         }
 
-        private void HandleFastFail()
-        {
-            // TODO: [JS] handle fast fail
-            //auto httpCallResponse = get_http_call_response(httpCallData, http_response());
-
-            //httpCallResponse->_Set_error_info(apiState.errCode, apiState.errMessage);
-            this.RouteServiceCall();
-            //return pplx::task_from_result<std::shared_ptr<http_call_response>>(httpCallResponse);
-        }
-
         /// <summary>
         /// If a request body has been provided, this will write it to the stream.  If there is no request body a completed task
         /// will be returned.
@@ -661,36 +611,6 @@ namespace Microsoft.Xbox.Services
             return queryString.ToString();
         }
 
-        // TODO?: port?
-        //void utils::generate_locales()
-        //{
-        //    std::vector<string_t> localeList = get_locale_list();
-        //    std::vector<string_t> localeFallbackList;
-        //    for (auto & locale : localeList)
-        //    {
-        //        // Build up fallback list, for instance, if the lang is "sd-Arab-PK"
-        //        // We add "sd-Arab" and "sd" as well 
-        //        // So that if an user's language preference is "fr-ml", "zh-hans", "en-us"
-        //        // fallback chain is going to be:
-        //        // fr-ml -> fr -> zh-hans -> zh -> en-us -> en
-        //        localeFallbackList.push_back(locale);
-        //        size_t nPos = locale.rfind(_T("-"));
-        //        while (nPos != string_t::npos)
-        //        {
-        //            localeFallbackList.push_back(locale.substr(0, nPos));
-        //            nPos = locale.rfind(_T("-"), nPos - 1);
-        //        }
-        //    }
-        //    s_locales.clear();
-        //    for (auto & locale : localeFallbackList)
-        //    {
-        //        s_locales += locale;
-        //        s_locales += _T(',');
-        //    }
-        //    // erase the last ','
-        //    s_locales.pop_back();
-        //}
-
         private void RouteServiceCall()
         {
             // TODO: port   
@@ -698,6 +618,7 @@ namespace Microsoft.Xbox.Services
 
         public void Sleep(TimeSpan timeSpan)
         {
+            // TODO: async and non blocking
             Task.Delay(timeSpan);
         }
     }

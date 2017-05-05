@@ -59,6 +59,7 @@ namespace Microsoft.Xbox.Services
         GetTeams,
         GetTeamDetails,
         GetUserProfiles,
+        GetProfileInfo,
         GetUserProfilesForSocialGroup,
         RegisterTeam,
         SendInvites,
