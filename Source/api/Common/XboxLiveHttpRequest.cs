@@ -192,7 +192,7 @@ namespace Microsoft.Xbox.Services
                 if (waitTimeInMilliseconds > 0)
                 {
                     // only allow a single call per endpoint to wait for the HTTP 429: TOO MANY REQUESTS to expire, and fast fail the rest
-                    if (!apiState.IsCallWaiting)
+                    if (!apiState.IsCallWaiting) // TODO: thread safety
                     {
                         apiState.IsCallWaiting = true;
                         HttpRetryAfterManager.Instance.SetState(this.XboxLiveAPI, apiState);
