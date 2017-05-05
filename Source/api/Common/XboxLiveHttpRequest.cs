@@ -61,7 +61,7 @@ namespace Microsoft.Xbox.Services
         public string Method { get; private set; }
         public string Url { get; private set; }
         public string ContractVersion { get; set; }
-        public bool RetryAllowed { get; set; }
+        public bool RetryAllowed { get; set; } // TODO: set correctly
         public string ContentType { get; set; }
         public string RequestBody { get; set; }
         public HttpCallResponseBodyType ResponseBodyType { get; set; }
@@ -347,8 +347,8 @@ namespace Microsoft.Xbox.Services
 
         private void SetUserAgent()
         {
-            const string userAgentType = "XboxServicesAPI";
-            lock (userAgentVersion)
+            const string userAgentType = "XboxServicesAPICSharp";
+            lock (XboxLive.Instance)
             {
                 if (string.IsNullOrEmpty(userAgentVersion))
                 {
@@ -361,7 +361,7 @@ namespace Microsoft.Xbox.Services
             }
 
             string userAgent = userAgentType + "/" + userAgentVersion;
-            if (!string.IsNullOrEmpty(this.CallerContext)) // TODO: set in SM, etc
+            if (!string.IsNullOrEmpty(this.CallerContext)) 
             {
                 userAgent += " " + this.CallerContext;
             }

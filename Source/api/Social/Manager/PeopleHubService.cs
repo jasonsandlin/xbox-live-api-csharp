@@ -57,6 +57,7 @@ namespace Microsoft.Xbox.Services.Social.Manager
 
             request.ContractVersion = "1";
             request.XboxLiveAPI = XboxLiveAPIName.GetProfileInfo;
+            request.CallerContext = "SocialManager";
 
             return request.GetResponseWithAuth(user)
                 .ContinueWith(responseTask =>
@@ -115,6 +116,7 @@ namespace Microsoft.Xbox.Services.Social.Manager
             }
 
             request.XboxLiveAPI = XboxLiveAPIName.GetSocialGraph;
+            request.CallerContext = "SocialManager";
 
             return request.GetResponseWithAuth(user)
                 .ContinueWith(responseTask =>
