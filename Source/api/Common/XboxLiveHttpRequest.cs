@@ -38,6 +38,7 @@ namespace Microsoft.Xbox.Services
             this.webRequest = (HttpWebRequest)WebRequest.Create(new Uri(this.Url));
             this.webRequest.Method = method;
             this.ResponseBodyType = HttpCallResponseBodyType.StringBody;
+            this.RetryAllowed = true;
 
             this.SetCustomHeader("Accept-Language", CultureInfo.CurrentUICulture + "," + CultureInfo.CurrentUICulture.TwoLetterISOLanguageName);
 #if WINDOWS_UWP
@@ -61,7 +62,7 @@ namespace Microsoft.Xbox.Services
         public string Method { get; private set; }
         public string Url { get; private set; }
         public string ContractVersion { get; set; }
-        public bool RetryAllowed { get; set; } // TODO: set correctly
+        public bool RetryAllowed { get; set; } 
         public string ContentType { get; set; }
         public string RequestBody { get; set; }
         public HttpCallResponseBodyType ResponseBodyType { get; set; }
@@ -242,8 +243,19 @@ namespace Microsoft.Xbox.Services
                 Task.Factory.FromAsync(this.webRequest.BeginGetResponse, (Func<IAsyncResult, WebResponse>)this.webRequest.EndGetResponse, null)
                 .ContinueWith(getResponseTask =>
                 {
+                    int httpStatusCode = ExtractStatusCodeFromResponse(getResponseTask);
+                    
+                    bool networkFailure = false;
+                    if (httpStatusCode == 0) 
+                    {
+                        // clasify as network failure if there's no http status code and still didn't get response
+                        networkFailure = getResponseTask.IsFaulted || getResponseTask.IsCanceled;
+                    }
+
                     var httpCallResponse = new XboxLiveHttpResponse(
-                        (HttpWebResponse)getResponseTask.Result,
+                        httpStatusCode,
+                        networkFailure,
+                        getResponseTask.IsFaulted ? null : (HttpWebResponse)getResponseTask.Result,
                         DateTime.UtcNow,
                         requestStartTime,
                         this.User != null ? this.User.XboxUserId : "",
@@ -424,8 +436,8 @@ namespace Microsoft.Xbox.Services
                 httpStatus == (int)HttpStatusCode.InternalServerError ||
                 httpStatus == (int)HttpStatusCode.BadGateway ||
                 httpStatus == (int)HttpStatusCode.ServiceUnavailable ||
-                httpStatus == (int)HttpStatusCode.GatewayTimeout 
-                // || httpNetworkError != xbox_live_error_code::no_error // TODO
+                httpStatus == (int)HttpStatusCode.GatewayTimeout ||
+                httpCallResponse.NetworkFailure
                 )
             {
                 TimeSpan retryAfter = httpCallResponse.RetryAfter;
@@ -621,5 +633,24 @@ namespace Microsoft.Xbox.Services
             // TODO: async and non blocking
             Task.Delay(timeSpan);
         }
+
+        private int ExtractStatusCodeFromResponse(Task<WebResponse> getResponseTask)
+        {
+            if (getResponseTask.IsFaulted && getResponseTask.Exception != null)
+            {
+                if (getResponseTask.Exception.InnerException is WebException)
+                {
+                    WebException e = (WebException)getResponseTask.Exception.InnerException;
+                    if (e.Response is HttpWebResponse)
+                    {
+                        HttpWebResponse w = (HttpWebResponse)e.Response;
+                        return (int)w.StatusCode;
+                    }
+                }
+            }
+
+            return 0;
+        }
+
     }
 }

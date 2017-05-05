@@ -47,11 +47,17 @@ namespace Microsoft.Xbox.Services
 
         public HttpCallResponseBodyType ResponseBodyType { get; private set; }
 
+        public Exception HttpStatusCode { get; private set; }
+
+        public bool NetworkFailure { get; private set; }
+
         internal XboxLiveHttpResponse()
         {
         }
 
         internal XboxLiveHttpResponse(
+            int httpStatusCode,
+            bool networkFailure,
             HttpWebResponse response, 
             DateTime responseReceivedTime, 
             DateTime requestStartTime,
@@ -64,6 +70,8 @@ namespace Microsoft.Xbox.Services
             HttpCallResponseBodyType responseBodyType
             )
         {
+            this.HttpStatus = httpStatusCode;
+            this.NetworkFailure = networkFailure;
             this.response = response;
             this.ResponseReceivedTime = responseReceivedTime;
             this.RequestStartTime = requestStartTime;
@@ -75,15 +83,21 @@ namespace Microsoft.Xbox.Services
             this.RequestBody = requestBody;
             this.ResponseBodyType = responseBodyType;
 
-            using (Stream body = response.GetResponseStream())
+            if (response != null)
             {
-                this.Initialize((int)response.StatusCode, body, response.ContentLength, "utf-8", response.Headers);
+                using (Stream body = response.GetResponseStream())
+                {
+                    this.Initialize((int)response.StatusCode, body, response.ContentLength, "utf-8", response.Headers);
+                }
             }
         }
 
         protected void Initialize(int httpStatus, Stream body, long contentLength, string characterSet, WebHeaderCollection headers)
         {
-            this.HttpStatus = httpStatus;
+            if (this.HttpStatus == 0)
+            {
+                this.HttpStatus = httpStatus;
+            }
             this.Headers = new Dictionary<string, string>();
 
             int vectorSize = contentLength > int.MaxValue ? int.MaxValue : (int)contentLength;

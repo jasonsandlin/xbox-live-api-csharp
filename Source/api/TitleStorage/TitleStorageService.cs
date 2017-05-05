@@ -231,6 +231,7 @@ namespace Microsoft.Xbox.Services.TitleStorage
                 var encoding = Encoding.UTF8;
                 httpRequest.RequestBody = encoding.GetString(dataChunk.ToArray());
                 httpRequest.XboxLiveAPI = XboxLiveAPIName.UploadBlob;
+                httpRequest.RetryAllowed = false;
 
                 var localIsFinalBlock = isFinalBlock;
                 httpRequest.GetResponseWithAuth(user).ContinueWith(responseTask =>

@@ -57,6 +57,7 @@ namespace Microsoft.Xbox.Services.Stats.Manager
             req.RequestBody = JsonConvert.SerializeObject(svdModel, serializerSettings);
             req.XboxLiveAPI = XboxLiveAPIName.UpdateStatsValueDocument;
             req.CallerContext = "StatsManager";
+            req.RetryAllowed = false;
             return req.GetResponseWithAuth(user);
         }
 
