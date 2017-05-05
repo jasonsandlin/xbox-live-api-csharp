@@ -11,6 +11,11 @@ namespace Microsoft.Xbox.Services
 
     public class XboxLiveHttpResponse
     {
+        public const string RetryAfterHeader = "Retry-After";
+        public const int RetryAfterCapInSeconds = 15;
+        public const string ETagHeader = "ETag";
+        public const string DateHeader = "Date";
+
         public TimeSpan RetryAfter { get; private set; }
 
         public DateTime ResponseReceivedTime { get; private set; }
@@ -18,6 +23,8 @@ namespace Microsoft.Xbox.Services
         public DateTime RequestStartTime { get; private set; }
 
         public string ETag { get; private set; }
+
+        public string ResponseDate { get; private set; }
 
         public string ErrorMessage { get; private set; }
 
@@ -145,6 +152,24 @@ namespace Microsoft.Xbox.Services
                 var key = headers.AllKeys[i];
                 this.Headers.Add(key, headers[key]);
             }
+
+            string retryAfterInSeconds;
+            this.Headers.TryGetValue(RetryAfterHeader, out retryAfterInSeconds);
+            if (!string.IsNullOrWhiteSpace(retryAfterInSeconds))
+            {
+                int numRetryAfterInSeconds = 0;
+                int.TryParse(retryAfterInSeconds, out numRetryAfterInSeconds);
+                numRetryAfterInSeconds = Math.Min(numRetryAfterInSeconds, RetryAfterCapInSeconds);
+                this.RetryAfter = TimeSpan.FromSeconds(numRetryAfterInSeconds);
+            }
+
+            string value = string.Empty;
+            this.Headers.TryGetValue(ETagHeader, out value);
+            this.ETag = value;
+
+            value = string.Empty;
+            this.Headers.TryGetValue(DateHeader, out value);
+            this.ResponseDate = value;
         }
     }
 }

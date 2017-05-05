@@ -243,19 +243,23 @@ namespace Microsoft.Xbox.Services
                 Task.Factory.FromAsync(this.webRequest.BeginGetResponse, (Func<IAsyncResult, WebResponse>)this.webRequest.EndGetResponse, null)
                 .ContinueWith(getResponseTask =>
                 {
-                    int httpStatusCode = ExtractStatusCodeFromResponse(getResponseTask);
-                    
+                    var httpWebResponse = ExtractHttpWebResponse(getResponseTask);
+                    int httpStatusCode = 0;
                     bool networkFailure = false;
-                    if (httpStatusCode == 0) 
+                    if (httpWebResponse != null)
                     {
-                        // clasify as network failure if there's no http status code and still didn't get response
+                        httpStatusCode = (int)httpWebResponse.StatusCode;
+                    }
+                    else
+                    {
+                        // classify as network failure if there's no HTTP status code and didn't get response
                         networkFailure = getResponseTask.IsFaulted || getResponseTask.IsCanceled;
                     }
 
                     var httpCallResponse = new XboxLiveHttpResponse(
                         httpStatusCode,
                         networkFailure,
-                        getResponseTask.IsFaulted ? null : (HttpWebResponse)getResponseTask.Result,
+                        httpWebResponse,
                         DateTime.UtcNow,
                         requestStartTime,
                         this.User != null ? this.User.XboxUserId : "",
@@ -279,11 +283,13 @@ namespace Microsoft.Xbox.Services
                             {
                                 taskCompletionSource.SetException(retryGetResponseTask.Exception);
                             }
-
-                            taskCompletionSource.SetResult(retryGetResponseTask.Result);
+                            else
+                            {
+                                taskCompletionSource.SetResult(retryGetResponseTask.Result);
+                            }
                         });
                     }
-                    else if (!getResponseTask.IsFaulted)
+                    else if (!networkFailure) // Call returned http status code
                     {
                         // HTTP 429: TOO MANY REQUESTS errors should return a JSON debug payload 
                         // describing the details about why the call was throttled
@@ -437,6 +443,7 @@ namespace Microsoft.Xbox.Services
                 httpStatus == (int)HttpStatusCode.BadGateway ||
                 httpStatus == (int)HttpStatusCode.ServiceUnavailable ||
                 httpStatus == (int)HttpStatusCode.GatewayTimeout ||
+                httpStatus == 404 || // TODO: remove
                 httpCallResponse.NetworkFailure
                 )
             {
@@ -634,7 +641,7 @@ namespace Microsoft.Xbox.Services
             Task.Delay(timeSpan);
         }
 
-        private int ExtractStatusCodeFromResponse(Task<WebResponse> getResponseTask)
+        private HttpWebResponse ExtractHttpWebResponse(Task<WebResponse> getResponseTask)
         {
             if (getResponseTask.IsFaulted && getResponseTask.Exception != null)
             {
@@ -644,12 +651,16 @@ namespace Microsoft.Xbox.Services
                     if (e.Response is HttpWebResponse)
                     {
                         HttpWebResponse w = (HttpWebResponse)e.Response;
-                        return (int)w.StatusCode;
+                        return w;
                     }
                 }
-            }
 
-            return 0;
+                return null;
+            }
+            else
+            {
+                return (HttpWebResponse)getResponseTask.Result;
+            }
         }
 
     }
