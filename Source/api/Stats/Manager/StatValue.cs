@@ -3,6 +3,8 @@
 
 namespace Microsoft.Xbox.Services.Stats.Manager
 {
+    using global::System;
+
     public class StatValue
     {
         public string Name { get; set; }
@@ -18,17 +20,17 @@ namespace Microsoft.Xbox.Services.Stats.Manager
 
         public int AsInteger()
         {
-            return (int)(double)this.Value;
+            return Convert.ToInt32(this.Value.ToString());
         }
 
         public string AsString()
         {
-            return (string)this.Value;
+            return this.Value.ToString();
         }
 
         public double AsNumber()
         {
-            return (double)this.Value;
+            return Convert.ToDouble(this.Value.ToString());
         }
 
         internal void SetStat(object value, StatValueType type)
