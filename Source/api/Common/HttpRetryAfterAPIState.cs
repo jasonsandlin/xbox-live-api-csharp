@@ -9,7 +9,6 @@ namespace Microsoft.Xbox.Services
     {
         public DateTime RetryAfterTime { get; set; }
         public Exception Exception { get; set; }
-        public bool IsCallWaiting { get; set; }
     }
 }
 
