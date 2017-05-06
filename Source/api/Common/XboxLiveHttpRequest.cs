@@ -117,8 +117,10 @@ namespace Microsoft.Xbox.Services
                             {
                                 taskCompletionSource.SetException(getResponseTask.Exception);
                             }
-
-                            taskCompletionSource.SetResult(getResponseTask.Result);
+                            else
+                            {
+                                taskCompletionSource.SetResult(getResponseTask.Result);
+                            }
                         });
                     }
                     catch (Exception e)
@@ -300,7 +302,15 @@ namespace Microsoft.Xbox.Services
                         {
                             this.HandleThrottledCalls(httpCallResponse);
                         }
-                        taskCompletionSource.SetResult(httpCallResponse);
+
+                        if (getResponseTask.IsFaulted)
+                        {
+                            taskCompletionSource.SetException(getResponseTask.Exception);
+                        }
+                        else
+                        {
+                            taskCompletionSource.SetResult(httpCallResponse);
+                        }
                     }
                     else
                     {
