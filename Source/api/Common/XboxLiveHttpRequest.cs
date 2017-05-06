@@ -194,11 +194,20 @@ namespace Microsoft.Xbox.Services
                 if (waitTimeInMilliseconds > 0)
                 {
                     // only allow a single call per endpoint to wait for the HTTP 429: TOO MANY REQUESTS to expire, and fast fail the rest
-                    if (!apiState.IsCallWaiting) // TODO: [JS] thread safety
+                    bool doSleep = false;
+                    lock (apiState)
                     {
-                        apiState.IsCallWaiting = true;
+                        if (!apiState.IsCallWaiting) 
+                        {
+                            doSleep = true;
+                            apiState.IsCallWaiting = true;
+                        }
+                    }
+
+                    if (doSleep) 
+                    {
                         HttpRetryAfterManager.Instance.SetState(this.XboxLiveAPI, apiState);
-                        this.Sleep(TimeSpan.FromMilliseconds(waitTimeInMilliseconds));
+                        Sleep(TimeSpan.FromMilliseconds(waitTimeInMilliseconds));
                         HttpRetryAfterManager.Instance.ClearState(this.XboxLiveAPI);
                     }
                     else
@@ -278,7 +287,7 @@ namespace Microsoft.Xbox.Services
                     {
                         // Wait and retry call
                         this.RouteServiceCall();
-                        this.Sleep(this.delayBeforeRetry);
+                        Sleep(this.delayBeforeRetry);
                         this.webRequest = CloneHttpWebRequest(this.webRequest);
                         this.InternalGetResponse().ContinueWith(retryGetResponseTask =>
                         {
@@ -317,8 +326,7 @@ namespace Microsoft.Xbox.Services
                         // Handle network errors when there's no retry
                         taskCompletionSource.SetException(getResponseTask.Exception);
 
-                        // TODO: [JS] error handling 
-                        // handle_response_error(httpCallResponse, networkError, errMessage, httpResponse);
+                        // HandleResponseError(); // TODO: extract error from JSON
                         this.RouteServiceCall();
                         taskCompletionSource.SetResult(httpCallResponse);
                     }
@@ -354,7 +362,7 @@ namespace Microsoft.Xbox.Services
             // If the Retry-After will happen first, just wait till Retry-After is done, and don't fast fail
             if (apiState.RetryAfterTime < timeoutTime)
             {
-                this.Sleep(remainingTimeBeforeRetryAfter);
+                Sleep(remainingTimeBeforeRetryAfter);
                 return false;
             }
             else
@@ -395,46 +403,6 @@ namespace Microsoft.Xbox.Services
                 userAgent += " " + this.CallerContext;
             }
             this.SetCustomHeader("UserAgent", userAgent);
-        }
-
-        private void HandleResponseError()
-        {
-            // TODO: [JS] pull out error message from HTTP response
-            //xbox_live_error_code errFromStatus = get_xbox_live_error_code_from_http_status(response.status_code());
-            //std::error_code errCode;
-            //std::string errMessage;
-            //if (errFromStatus == xbox_live_error_code::no_error)
-            //{
-            //    errCode = std::make_error_code(errFromException);
-            //    errMessage = errMessageFromException;
-            //}
-            //else
-            //{
-            //    errCode = std::make_error_code(errFromStatus);
-            //    stringstream_t errorMessageHttp;
-            //    errorMessageHttp << _T("http error: ") << errCode.message().c_str();
-            //    errMessage = utility::conversions::to_utf8string(errorMessageHttp.str().c_str());
-            //}
-
-            //// Try to pull out error message from HTTP response
-            //try
-            //{
-            //    if (response.body().is_valid())
-            //    {
-            //        string_t debugString = response.extract_string().get();
-            //        if (!debugString.empty())
-            //        {
-            //            std::string debugStringUtf8 = utility::conversions::to_utf8string(debugString);
-            //            errMessage += " HTTP Response Body: ";
-            //            errMessage += debugStringUtf8;
-            //        }
-            //    }
-            //}
-            //catch (...)
-            //    {
-            //}
-
-            //httpCallResponse->_Set_error_info(errCode, errMessage);
         }
 
         private bool ShouldRetry(XboxLiveHttpResponse httpCallResponse)
@@ -481,10 +449,10 @@ namespace Microsoft.Xbox.Services
                     httpCallResponse.ResponseReceivedTime.Millisecond;
                 double lerpScaler = (randTime % 10000) / 10000.0; // from 0 to 1 based on clock
 
-                // TODO: [JS] port
-                // #if UNIT_TEST_SERVICES
-                // lerpScaler = 0; // make unit tests deterministic
-                // #endif
+                if (XboxLive.UseMockHttp)
+                {
+                    lerpScaler = 0; // make tests deterministic
+                }
 
                 double secondsToWaitUncapped = secondsToWaitMin + secondsToWaitDelta * lerpScaler; // lerp between min & max wait
                 double millisecondsToWait = Math.Min(secondsToWaitUncapped, MaxDelayTimeInSec) * 1000.0; // cap max wait to 1 min
@@ -531,8 +499,8 @@ namespace Microsoft.Xbox.Services
             {
                 try
                 {
-                    // TODO: [JS] await 
-                    this.User.RefreshToken();
+                    Task task = this.User.RefreshToken();
+                    task.Wait();
                     this.hasPerformedRetryOn401 = true;
                 }
                 catch (Exception)
@@ -643,13 +611,13 @@ namespace Microsoft.Xbox.Services
 
         private void RouteServiceCall()
         {
-            // TODO: [JS] port   
+            // TODO: port
         }
 
-        public void Sleep(TimeSpan timeSpan)
+        public static void Sleep(TimeSpan timeSpan)
         {
-            // TODO: [JS] async and non blocking
-            Task.Delay(timeSpan);
+            // WinRT doesn't have Thread.Sleep, so using ManualResetEvent
+            new ManualResetEvent(false).WaitOne(timeSpan);
         }
 
         private HttpWebResponse ExtractHttpWebResponse(Task<WebResponse> getResponseTask)
