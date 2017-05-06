@@ -184,41 +184,13 @@ namespace Microsoft.Xbox.Services
         {
             shouldFastFail = false;
 
-            uint waitTimeInMilliseconds = 0;
-            if (this.ShouldFastFail(apiState, requestStartTime, out waitTimeInMilliseconds))
+            if (this.ShouldFastFail(apiState, requestStartTime))
             {
                 shouldFastFail = true; // should fast fail
             }
             else
             {
-                if (waitTimeInMilliseconds > 0)
-                {
-                    // only allow a single call per endpoint to wait for the HTTP 429: TOO MANY REQUESTS to expire, and fast fail the rest
-                    bool doSleep = false;
-                    lock (apiState)
-                    {
-                        if (!apiState.IsCallWaiting) 
-                        {
-                            doSleep = true;
-                            apiState.IsCallWaiting = true;
-                        }
-                    }
-
-                    if (doSleep) 
-                    {
-                        HttpRetryAfterManager.Instance.SetState(this.XboxLiveAPI, apiState);
-                        Sleep(TimeSpan.FromMilliseconds(waitTimeInMilliseconds));
-                        HttpRetryAfterManager.Instance.ClearState(this.XboxLiveAPI);
-                    }
-                    else
-                    {
-                        shouldFastFail = true; // should fast fail
-                    }
-                }
-                else
-                {
-                    HttpRetryAfterManager.Instance.ClearState(this.XboxLiveAPI);
-                }
+                HttpRetryAfterManager.Instance.ClearState(this.XboxLiveAPI);
             }
         }
 
@@ -286,7 +258,7 @@ namespace Microsoft.Xbox.Services
                     if (shouldRetry)
                     {
                         // Wait and retry call
-                        this.RouteServiceCall();
+                        this.RouteServiceCall(httpCallResponse, getResponseTask.Exception);
                         Sleep(this.delayBeforeRetry);
                         this.webRequest = CloneHttpWebRequest(this.webRequest);
                         this.InternalGetResponse().ContinueWith(retryGetResponseTask =>
@@ -301,11 +273,11 @@ namespace Microsoft.Xbox.Services
                             }
                         });
                     }
-                    else if (!networkFailure) // Call returned http status code
+                    else if (!networkFailure) // Got HTTP status code
                     {
                         // HTTP 429: TOO MANY REQUESTS errors should return a JSON debug payload 
                         // describing the details about why the call was throttled
-                        this.RouteServiceCall();
+                        this.RouteServiceCall(httpCallResponse, getResponseTask.Exception);
 
                         if (httpCallResponse.HttpStatus == HttpStatusCodeTooManyRequests) 
                         {
@@ -323,11 +295,11 @@ namespace Microsoft.Xbox.Services
                     }
                     else
                     {
-                        // Handle network errors when there's no retry
-                        taskCompletionSource.SetException(getResponseTask.Exception);
+                        // Handle network errors
 
                         // HandleResponseError(); // TODO: extract error from JSON
-                        this.RouteServiceCall();
+                        this.RouteServiceCall(httpCallResponse, getResponseTask.Exception);
+                        taskCompletionSource.SetException(getResponseTask.Exception);
                         taskCompletionSource.SetResult(httpCallResponse);
                     }
                 });
@@ -338,19 +310,14 @@ namespace Microsoft.Xbox.Services
 
         private bool ShouldFastFail(
             HttpRetryAfterApiState apiState,
-            DateTime currentTime,
-            out uint waitTimeInMilliseconds
+            DateTime currentTime
             )
         {
-            waitTimeInMilliseconds = 0;
-            // TODO: [JS] set waitTimeInMilliseconds
-
             if (apiState.Exception == null)
             {
                 return false;
             }
 
-            // TODO: [JS] set apiState.RetryAfterTime
             TimeSpan remainingTimeBeforeRetryAfter = apiState.RetryAfterTime - currentTime;
             if (remainingTimeBeforeRetryAfter.Ticks <= 0)
             {
@@ -371,13 +338,13 @@ namespace Microsoft.Xbox.Services
             }
         }
 
-        private Task<XboxLiveHttpResponse> HandleFastFail( HttpRetryAfterApiState apiState )
+        private Task<XboxLiveHttpResponse> HandleFastFail(HttpRetryAfterApiState apiState)
         {
             // TODO: [JS] handle fast fail
             //auto httpCallResponse = get_http_call_response(httpCallData, http_response());
 
             //httpCallResponse->_Set_error_info(apiState.errCode, apiState.errMessage);
-            this.RouteServiceCall();
+            //this.RouteServiceCall(httpCallResponse, null);
             //return pplx::task_from_result<std::shared_ptr<http_call_response>>(httpCallResponse);
             return null;
         }
@@ -609,9 +576,26 @@ namespace Microsoft.Xbox.Services
             return queryString.ToString();
         }
 
-        private void RouteServiceCall()
+        private void RecordServiceResult(XboxLiveHttpResponse httpCallResponse, Exception exception)
         {
-            // TODO: port
+            // Only remember result if there was an error and there was a Retry-After header
+            if (this.XboxLiveAPI != XboxLiveAPIName.Unspecified &&
+                httpCallResponse.HttpStatus >= 400 &&
+                httpCallResponse.RetryAfter.TotalSeconds > 0)
+            {
+                DateTime currentTime = DateTime.UtcNow;
+                HttpRetryAfterApiState state = new HttpRetryAfterApiState();
+                state.RetryAfterTime = currentTime + httpCallResponse.RetryAfter;
+                state.Exception = exception;
+                HttpRetryAfterManager.Instance.SetState(this.XboxLiveAPI, state);
+            }
+        }
+
+        private void RouteServiceCall(XboxLiveHttpResponse httpCallResponse, Exception exception)
+        {
+            RecordServiceResult(httpCallResponse, exception);
+
+            // TODO: port route logic
         }
 
         public static void Sleep(TimeSpan timeSpan)
