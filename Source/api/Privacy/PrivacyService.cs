@@ -14,23 +14,24 @@ namespace Microsoft.Xbox.Services.Privacy
     public class PrivacyService : IPrivacyService
     {
         private readonly string privacyEndpoint;
-
+        private readonly XboxLiveUser user;
         protected XboxLiveSettings settings;
 
-        internal PrivacyService()
+        internal PrivacyService(XboxLiveUser user)
         {
+            this.user = user;
             this.privacyEndpoint = XboxLiveAppConfiguration.Instance.GetEndpointForService("privacy");
         }
 
-        public Task<PermissionCheckResult> CheckPermissionWithTargetUserAsync(XboxLiveUser user, string permissionId, string targetXboxUserId)
+        public Task<PermissionCheckResult> CheckPermissionWithTargetUserAsync(string permissionId, string targetXboxUserId)
         {
             XboxLiveHttpRequest req = XboxLiveHttpRequest.Create(
                 HttpMethod.Get, 
                 this.privacyEndpoint,
-                string.Format("/users/xuid({0})/permission/validate?setting={1}&target=xuid({2})", user.XboxUserId, permissionId, targetXboxUserId));
+                string.Format("/users/xuid({0})/permission/validate?setting={1}&target=xuid({2})", this.user.XboxUserId, permissionId, targetXboxUserId));
             req.XboxLiveAPI = XboxLiveAPIName.CheckPermissionWithTargetUser;
 
-            return req.GetResponseWithAuth(user)
+            return req.GetResponseWithAuth(this.user)
                 .ContinueWith(responseTask =>
                 {
                     var response = responseTask.Result;
@@ -40,17 +41,17 @@ namespace Microsoft.Xbox.Services.Privacy
                 });
         }
 
-        public Task<List<MultiplePermissionsCheckResult>> CheckMultiplePermissionsWithMultipleTargetUsersAsync(XboxLiveUser user, IList<string> permissionIds, IList<string> targetXboxUserIds)
+        public Task<List<MultiplePermissionsCheckResult>> CheckMultiplePermissionsWithMultipleTargetUsersAsync(IList<string> permissionIds, IList<string> targetXboxUserIds)
         {
             XboxLiveHttpRequest req = XboxLiveHttpRequest.Create(
                 HttpMethod.Post,
                 this.privacyEndpoint,
-                string.Format("/users/xuid({0})/permission/validate", user.XboxUserId));
+                string.Format("/users/xuid({0})/permission/validate", this.user.XboxUserId));
 
             Models.PrivacySettingsRequest reqBodyObject = new Models.PrivacySettingsRequest(permissionIds, targetXboxUserIds);
             req.RequestBody = JsonSerialization.ToJson(reqBodyObject);
             req.XboxLiveAPI = XboxLiveAPIName.CheckMultiplePermissionsWithMultipleTargetUsers;
-            return req.GetResponseWithAuth(user)
+            return req.GetResponseWithAuth(this.user)
                 .ContinueWith(responseTask =>
                 {
                     var response = responseTask.Result;

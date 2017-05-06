@@ -14,14 +14,11 @@ namespace Microsoft.Xbox.Services.UnitTests.Leaderboards
     [TestClass]
     public class PrivacyTests : TestBase
     {
-        private PrivacyService privacyService;
-
         [TestInitialize]
         public override void TestInitialize()
         {
             base.TestInitialize();
             MockXboxLiveData.Load(Environment.CurrentDirectory + "\\Privacy\\MockDataForPrivacyTests.json");
-            this.privacyService = XboxLive.Instance.PrivacyService;
         }
 
         [TestCleanup]
@@ -69,7 +66,7 @@ namespace Microsoft.Xbox.Services.UnitTests.Leaderboards
         [TestMethod]
         public async Task CheckPermissionWithTargetUserAsync()
         {
-            PermissionCheckResult result = await this.privacyService.CheckPermissionWithTargetUserAsync(this.user, PermissionIdConstants.ViewTargetVideoHistory, "2814680291986301");
+            PermissionCheckResult result = await this.user.Services.PrivacyService.CheckPermissionWithTargetUserAsync(PermissionIdConstants.ViewTargetVideoHistory, "2814680291986301");
             MockXboxLiveData.MockRequestData mockRequestData = MockXboxLiveData.MockResponses["defaultCheckPermissionsResponse"];
             JObject responseJson = JObject.Parse(mockRequestData.Response.ResponseBodyString);
             Assert.AreEqual("GET", mockRequestData.Request.Method);
@@ -89,7 +86,7 @@ namespace Microsoft.Xbox.Services.UnitTests.Leaderboards
             xuids.Add("2814680291986301");
             xuids.Add("2814634309691161");
 
-            List<MultiplePermissionsCheckResult> result = await this.privacyService.CheckMultiplePermissionsWithMultipleTargetUsersAsync(this.user, permissionIds, xuids);
+            List<MultiplePermissionsCheckResult> result = await this.user.Services.PrivacyService.CheckMultiplePermissionsWithMultipleTargetUsersAsync(permissionIds, xuids);
             MockXboxLiveData.MockRequestData mockRequestData = MockXboxLiveData.MockResponses["defaultCheckMultiplePermissionsResponse"];
             JObject responseJson = JObject.Parse(mockRequestData.Response.ResponseBodyString);
             Assert.AreEqual("POST", mockRequestData.Request.Method);

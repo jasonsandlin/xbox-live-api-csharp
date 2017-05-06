@@ -7,7 +7,6 @@ namespace Microsoft.Xbox.Services
     using global::System.IO;
     using Microsoft.Xbox.Services.Social.Manager;
     using Microsoft.Xbox.Services.Stats.Manager;
-    using Microsoft.Xbox.Services.Privacy;
 
     public partial class XboxLive : IDisposable
     {
@@ -16,7 +15,6 @@ namespace Microsoft.Xbox.Services
         private XboxLiveSettings settings;
         private IStatsManager statsManager;
         private ISocialManager socialManager;
-        private PrivacyService privacyService;
 
         private static readonly object instanceLock = new object();
         private readonly XboxLiveAppConfiguration appConfig;
@@ -79,18 +77,6 @@ namespace Microsoft.Xbox.Services
                     Instance.statsManager = Stats.Manager.StatsManager.Instance;
                 }
                 return Instance.statsManager;
-            }
-        }
-
-        public PrivacyService PrivacyService
-        {
-            get
-            {
-                if (Instance.privacyService == null)
-                {
-                    Instance.privacyService = new PrivacyService();
-                }
-                return Instance.privacyService;
             }
         }
 

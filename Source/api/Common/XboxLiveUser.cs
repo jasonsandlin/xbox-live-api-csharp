@@ -12,7 +12,10 @@ namespace Microsoft.Xbox.Services
 
     public partial class XboxLiveUser : IXboxLiveUser
     {
+        private static readonly object instanceLock = new object();
+
         private readonly IUserImpl userImpl;
+        private XboxLiveServices xboxLiveServices;
 
         private static event EventHandler<SignInCompletedEventArgs> InternalSignInCompleted;
         private static List<EventHandler<SignInCompletedEventArgs>> signInDelegates = new List<EventHandler<SignInCompletedEventArgs>>();
@@ -91,6 +94,25 @@ namespace Microsoft.Xbox.Services
             get
             {
                 return this.userImpl.Gamertag;
+            }
+        }
+
+        public XboxLiveServices Services
+        {
+            get
+            {
+                if (this.xboxLiveServices == null)
+                {
+                    lock (instanceLock)
+                    {
+                        if (this.xboxLiveServices == null)
+                        {
+                            this.xboxLiveServices = new XboxLiveServices(this);
+                        }
+                    }
+                }
+
+                return this.xboxLiveServices;
             }
         }
 
