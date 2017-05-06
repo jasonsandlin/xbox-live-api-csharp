@@ -194,7 +194,7 @@ namespace Microsoft.Xbox.Services
                 if (waitTimeInMilliseconds > 0)
                 {
                     // only allow a single call per endpoint to wait for the HTTP 429: TOO MANY REQUESTS to expire, and fast fail the rest
-                    if (!apiState.IsCallWaiting) // TODO: thread safety
+                    if (!apiState.IsCallWaiting) // TODO: [JS] thread safety
                     {
                         apiState.IsCallWaiting = true;
                         HttpRetryAfterManager.Instance.SetState(this.XboxLiveAPI, apiState);
@@ -335,14 +335,14 @@ namespace Microsoft.Xbox.Services
             )
         {
             waitTimeInMilliseconds = 0;
-            // TODO: set waitTimeInMilliseconds
+            // TODO: [JS] set waitTimeInMilliseconds
 
             if (apiState.Exception == null)
             {
                 return false;
             }
 
-            // TODO: set apiState.RetryAfterTime
+            // TODO: [JS] set apiState.RetryAfterTime
             TimeSpan remainingTimeBeforeRetryAfter = apiState.RetryAfterTime - currentTime;
             if (remainingTimeBeforeRetryAfter.Ticks <= 0)
             {
@@ -454,7 +454,7 @@ namespace Microsoft.Xbox.Services
                 httpStatus == (int)HttpStatusCode.BadGateway ||
                 httpStatus == (int)HttpStatusCode.ServiceUnavailable ||
                 httpStatus == (int)HttpStatusCode.GatewayTimeout ||
-                httpStatus == 404 || // TODO: remove
+                httpStatus == 404 || // TODO: [JS] remove
                 httpCallResponse.NetworkFailure
                 )
             {
@@ -481,7 +481,7 @@ namespace Microsoft.Xbox.Services
                     httpCallResponse.ResponseReceivedTime.Millisecond;
                 double lerpScaler = (randTime % 10000) / 10000.0; // from 0 to 1 based on clock
 
-                // TODO: port
+                // TODO: [JS] port
                 // #if UNIT_TEST_SERVICES
                 // lerpScaler = 0; // make unit tests deterministic
                 // #endif
@@ -531,7 +531,7 @@ namespace Microsoft.Xbox.Services
             {
                 try
                 {
-                    // TODO: await 
+                    // TODO: [JS] await 
                     this.User.RefreshToken();
                     this.hasPerformedRetryOn401 = true;
                 }
@@ -643,12 +643,12 @@ namespace Microsoft.Xbox.Services
 
         private void RouteServiceCall()
         {
-            // TODO: port   
+            // TODO: [JS] port   
         }
 
         public void Sleep(TimeSpan timeSpan)
         {
-            // TODO: async and non blocking
+            // TODO: [JS] async and non blocking
             Task.Delay(timeSpan);
         }
 

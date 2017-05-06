@@ -71,8 +71,8 @@ namespace Microsoft.Xbox.Services.System
             this.AuthConfig = new AuthConfig
             {
                 Sandbox = appConfig.Sandbox,
-                EnvrionmentPrefix = appConfig.EnvironmentPrefix,
-                Envrionment = appConfig.Environment,
+                EnvironmentPrefix = appConfig.EnvironmentPrefix,
+                Environment = appConfig.Environment,
                 UseCompactTicket = appConfig.UseFirstPartyToken
             };
         }
