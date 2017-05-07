@@ -9,6 +9,7 @@ namespace Microsoft.Xbox.Services
     {
         public DateTime RetryAfterTime { get; set; }
         public Exception Exception { get; set; }
+        public XboxLiveHttpResponse HttpCallResponse { get; set; }
     }
 }
 

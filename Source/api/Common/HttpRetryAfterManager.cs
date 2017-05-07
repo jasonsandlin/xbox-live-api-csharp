@@ -57,14 +57,14 @@ namespace Microsoft.Xbox.Services
 
         }
 
-        public HttpRetryAfterApiState GetState(
-            XboxLiveAPIName xboxLiveApi
+        public bool GetState(
+            XboxLiveAPIName xboxLiveApi,
+            out HttpRetryAfterApiState returnValue
         )
         {
             lock (instanceLock)
             {
-                HttpRetryAfterApiState returnValue;
-                return this.apiStateMap.TryGetValue(xboxLiveApi, out returnValue) ? returnValue : new HttpRetryAfterApiState();
+                return this.apiStateMap.TryGetValue(xboxLiveApi, out returnValue);
             }
         }
     };

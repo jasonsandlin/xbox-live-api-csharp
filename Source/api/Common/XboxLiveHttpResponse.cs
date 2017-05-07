@@ -54,8 +54,6 @@ namespace Microsoft.Xbox.Services
 
         public HttpCallResponseBodyType ResponseBodyType { get; private set; }
 
-        public Exception HttpStatusCode { get; private set; }
-
         public bool NetworkFailure { get; private set; }
 
         internal XboxLiveHttpResponse()
