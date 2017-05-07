@@ -11,8 +11,8 @@ namespace Microsoft.Xbox.Services.System
     {
         public string Sandbox { get; set; }
         public string XboxLiveRelyingParty { get; set; }
-        public string EnvrionmentPrefix { get; set; }
-        public string Envrionment { get; set; }
+        public string EnvironmentPrefix { get; set; }
+        public string Environment { get; set; }
         public bool UseCompactTicket { get; set; }
         public string XboxLiveEndpoint { get; set; }
         public string RPSTicketService { get; set; }
@@ -22,19 +22,19 @@ namespace Microsoft.Xbox.Services.System
         {
             XboxLiveEndpoint = "https://xboxlive.com";
             XboxLiveRelyingParty = "https://auth.xboxlive.com";
-            UserTokenSiteName = GetEndpointPath("user.auth", "", Envrionment, false);
+            UserTokenSiteName = GetEndpointPath("user.auth", "", Environment, false);
             RPSTicketPolicy = UseCompactTicket ? "MBI_SSL" : "DELEGATION";
             RPSTicketService = UseCompactTicket ? UserTokenSiteName : "xbl.signin xbl.friends";
         }
 
-        public static string GetEndpointPath(string serviceName, string envrionmentPrefix, string envrionment, bool appendProtocol = true)
+        public static string GetEndpointPath(string serviceName, string EnvironmentPrefix, string Environment, bool appendProtocol = true)
         {
             string endpointPath = "";
             if(appendProtocol)
             {
                 endpointPath += "https://";
             }
-            endpointPath += envrionmentPrefix + serviceName + envrionment + ".xboxlive.com";
+            endpointPath += EnvironmentPrefix + serviceName + Environment + ".xboxlive.com";
             return endpointPath;
         }
     }
