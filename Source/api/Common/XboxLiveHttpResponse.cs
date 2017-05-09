@@ -153,7 +153,7 @@ namespace Microsoft.Xbox.Services
 
             string retryAfterInSeconds;
             this.Headers.TryGetValue(RetryAfterHeader, out retryAfterInSeconds);
-            if (!string.IsNullOrWhiteSpace(retryAfterInSeconds))
+            if (!string.IsNullOrEmpty(retryAfterInSeconds))
             {
                 int numRetryAfterInSeconds = 0;
                 int.TryParse(retryAfterInSeconds, out numRetryAfterInSeconds);

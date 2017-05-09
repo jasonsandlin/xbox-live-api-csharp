@@ -331,7 +331,10 @@ namespace Microsoft.Xbox.Services
         {
             XboxLiveHttpResponse httpCallResponse = apiState.HttpCallResponse;
             this.RouteServiceCall(httpCallResponse);
-            return Task.FromException<XboxLiveHttpResponse>(apiState.Exception);
+
+            TaskCompletionSource<XboxLiveHttpResponse> taskCompletionSource = new TaskCompletionSource<XboxLiveHttpResponse>();
+            taskCompletionSource.SetException(apiState.Exception);
+            return taskCompletionSource.Task;
         }
 
         private void SetUserAgent()
@@ -618,10 +621,10 @@ namespace Microsoft.Xbox.Services
             {
                 if (property.Name != "ContentLength" && property.Name != "Headers")
                 {
-                    object value = property.GetValue(original);
+                    object value = property.GetValue(original, null);
                     if (property.CanWrite)
                     {
-                        property.SetValue(clone, value);
+                        property.SetValue(clone, value, null);
                     }
                 }
             }
