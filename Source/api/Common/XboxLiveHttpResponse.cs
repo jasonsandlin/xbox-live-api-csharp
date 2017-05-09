@@ -11,11 +11,20 @@ namespace Microsoft.Xbox.Services
 
     public class XboxLiveHttpResponse
     {
-        public long RetryAfterInSeconds { get; private set; }
+        public const string RetryAfterHeader = "Retry-After";
+        public const int RetryAfterCapInSeconds = 15;
+        public const string ETagHeader = "ETag";
+        public const string DateHeader = "Date";
 
-        public string ResponseDate { get; private set; }
+        public TimeSpan RetryAfter { get; private set; }
+
+        public DateTime ResponseReceivedTime { get; private set; }
+
+        public DateTime RequestStartTime { get; private set; }
 
         public string ETag { get; private set; }
+
+        public string ResponseDate { get; private set; }
 
         public string ErrorMessage { get; private set; }
 
@@ -29,24 +38,71 @@ namespace Microsoft.Xbox.Services
 
         public string ResponseBodyString { get; private set; }
 
-        public HttpWebResponse response;
+        public HttpWebResponse response { get; private set; }
+
+        public string XboxUserId { get; private set; }
+
+        public XboxLiveSettings ContextSettings { get; private set; }
+
+        public string Url { get; private set; }
+
+        public XboxLiveAPIName XboxLiveAPI { get; private set; }
+
+        public string Method { get; private set; }
+
+        public string RequestBody { get; private set; }
+
+        public HttpCallResponseBodyType ResponseBodyType { get; private set; }
+
+        public bool NetworkFailure { get; private set; }
 
         internal XboxLiveHttpResponse()
         {
         }
 
-        internal XboxLiveHttpResponse(HttpWebResponse response)
+        internal XboxLiveHttpResponse(
+            int httpStatusCode,
+            bool networkFailure,
+            HttpWebResponse response, 
+            DateTime responseReceivedTime, 
+            DateTime requestStartTime,
+            string xboxUserId,
+            XboxLiveSettings contextSettings,                        
+            string url,
+            XboxLiveAPIName xboxLiveAPI,
+            string method,
+            string requestBody,
+            HttpCallResponseBodyType responseBodyType
+            )
         {
+            this.HttpStatus = httpStatusCode;
+            this.NetworkFailure = networkFailure;
             this.response = response;
-            using (Stream body = response.GetResponseStream())
+            this.ResponseReceivedTime = responseReceivedTime;
+            this.RequestStartTime = requestStartTime;
+            this.XboxUserId = xboxUserId;
+            this.ContextSettings = contextSettings;
+            this.Url = url;
+            this.XboxLiveAPI = xboxLiveAPI;
+            this.Method = method;
+            this.RequestBody = requestBody;
+            this.ResponseBodyType = responseBodyType;
+
+            if (response != null)
             {
-                this.Initialize((int)response.StatusCode, body, response.ContentLength, "utf-8", response.Headers);
+                using (Stream body = response.GetResponseStream())
+                {
+                    this.Initialize((int)response.StatusCode, body, response.ContentLength, "utf-8", response.Headers);
+                }
             }
         }
 
         protected void Initialize(int httpStatus, Stream body, long contentLength, string characterSet, WebHeaderCollection headers)
         {
-            this.HttpStatus = httpStatus;
+            if (this.HttpStatus == 0)
+            {
+                this.HttpStatus = httpStatus;
+            }
             this.Headers = new Dictionary<string, string>();
 
             int vectorSize = contentLength > int.MaxValue ? int.MaxValue : (int)contentLength;
@@ -67,23 +123,26 @@ namespace Microsoft.Xbox.Services
                     totalBytesRead += bytesRead;
                 }
                 while (totalBytesRead < contentLength);
-                
 
-                Encoding encoding;
-                switch (characterSet.ToLower())
+
+                if (this.ResponseBodyType != HttpCallResponseBodyType.VectorBody)
                 {
-                    case "utf-8":
-                        encoding = Encoding.UTF8;
-                        break;
-                    case "ascii":
-                        encoding = Encoding.ASCII;
-                        break;
-                    default:
-                        encoding = Encoding.UTF8;
-                        break;
-                }
+                    Encoding encoding;
+                    switch (characterSet.ToLower())
+                    {
+                        case "utf-8":
+                            encoding = Encoding.UTF8;
+                            break;
+                        case "ascii":
+                            encoding = Encoding.ASCII;
+                            break;
+                        default:
+                            encoding = Encoding.UTF8;
+                            break;
+                    }
 
-                this.ResponseBodyString = encoding.GetString(this.ResponseBodyVector);
+                    this.ResponseBodyString = encoding.GetString(this.ResponseBodyVector);
+                }
             }
 
             for (int i = 0; i < headers.Count; ++i)
@@ -91,6 +150,25 @@ namespace Microsoft.Xbox.Services
                 var key = headers.AllKeys[i];
                 this.Headers.Add(key, headers[key]);
             }
+
+            string retryAfterInSeconds;
+            this.Headers.TryGetValue(RetryAfterHeader, out retryAfterInSeconds);
+            if (!string.IsNullOrWhiteSpace(retryAfterInSeconds))
+            {
+                int numRetryAfterInSeconds = 0;
+                int.TryParse(retryAfterInSeconds, out numRetryAfterInSeconds);
+                numRetryAfterInSeconds = Math.Min(numRetryAfterInSeconds, RetryAfterCapInSeconds);
+                this.RetryAfter = TimeSpan.FromSeconds(numRetryAfterInSeconds);
+            }
+
+            string value = string.Empty;
+            this.Headers.TryGetValue(ETagHeader, out value);
+            this.ETag = value;
+
+            value = string.Empty;
+            this.Headers.TryGetValue(DateHeader, out value);
+            this.ResponseDate = value;
         }
     }
 }
+

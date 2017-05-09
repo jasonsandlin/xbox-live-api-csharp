@@ -7,14 +7,19 @@ namespace Microsoft.Xbox.Services
 
     public class XboxLiveSettings
     {
+        private const int DefaultHttpTimeoutWindowInSeconds = 20;
+        private const int DefaultLongHttpTimeoutInSeconds = 5 * 60;
+        private const int DefaultRetryDelayInSeconds = 2;
+
         public XboxLiveSettings()
         {
             this.DiagnosticsTraceLevel = XboxServicesDiagnosticsTraceLevel.Off;
+            this.HttpTimeoutWindow = TimeSpan.FromSeconds(DefaultHttpTimeoutWindowInSeconds);
+            this.LongHttpTimeout = TimeSpan.FromSeconds(DefaultLongHttpTimeoutInSeconds);
+            this.HttpRetryDelay = TimeSpan.FromSeconds(DefaultRetryDelayInSeconds);
         }
 
         public bool UseCoreDispatcherForEventRouting { get; set; }
-
-        public TimeSpan WebsocketTimeoutWindow { get; set; }
 
         public TimeSpan HttpTimeoutWindow { get; set; }
 
@@ -22,22 +27,27 @@ namespace Microsoft.Xbox.Services
 
         public TimeSpan LongHttpTimeout { get; set; }
 
-        public TimeSpan HttpTimeout { get; set; }
-
         public XboxServicesDiagnosticsTraceLevel DiagnosticsTraceLevel { get; private set; }
 
-        //public event EventHandler<XboxLiveLogCallEventArgs> LogCallRouted;
-
-        public bool EnableServiceCallRoutedEvents { get; set; }
+        public bool AreAssertsForThrottlingInDevSandboxesDisabled { get; private set; }
 
         public void DisableAssertsForXboxLiveThrottlingInDevSandboxes(XboxLiveContextThrottleSetting setting)
         {
-            throw new NotImplementedException();
+            if (setting == XboxLiveContextThrottleSetting.ThisCodeNeedsToBeChangedToAvoidThrottling)
+            {
+                this.AreAssertsForThrottlingInDevSandboxesDisabled = true;
+            }
         }
 
-        public void DisableAssertsForMaximumNumberOfWebsocketsActivated(XboxLiveContextRecommendedSetting setting)
-        {
-            throw new NotImplementedException();
-        }
+        //public TimeSpan WebsocketTimeoutWindow { get; set; }
+
+        //public event EventHandler<XboxLiveLogCallEventArgs> LogCallRouted;
+
+        //public bool EnableServiceCallRoutedEvents { get; set; }
+
+        //public void DisableAssertsForMaximumNumberOfWebsocketsActivated(XboxLiveContextRecommendedSetting setting)
+        //{
+        //    throw new NotImplementedException();
+        //}
     }
 }

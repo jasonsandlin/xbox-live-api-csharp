@@ -55,6 +55,9 @@ namespace Microsoft.Xbox.Services.Stats.Manager
                 });
 
             req.RequestBody = JsonConvert.SerializeObject(svdModel, serializerSettings);
+            req.XboxLiveAPI = XboxLiveAPIName.UpdateStatsValueDocument;
+            req.CallerContext = "StatsManager";
+            req.RetryAllowed = false;
             return req.GetResponseWithAuth(user);
         }
 
@@ -67,13 +70,10 @@ namespace Microsoft.Xbox.Services.Stats.Manager
             );
 
             XboxLiveHttpRequest req = XboxLiveHttpRequest.Create(HttpMethod.Get, this.statsReadEndpoint, pathAndQuery);
+            req.XboxLiveAPI = XboxLiveAPIName.GetStatsValueDocument;
+            req.CallerContext = "StatsManager";
             return req.GetResponseWithAuth(user).ContinueWith(task =>
             {
-                if (task.IsFaulted)
-                {
-                    throw task.Exception;
-                }
-
                 XboxLiveHttpResponse response = task.Result;
                 var svdModel = JsonConvert.DeserializeObject<Models.StatsValueDocumentModel>(response.ResponseBodyString);
                 var svd = new StatsValueDocument(svdModel.Stats.Title, svdModel.Revision)

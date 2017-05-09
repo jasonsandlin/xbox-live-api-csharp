@@ -71,8 +71,8 @@ namespace Microsoft.Xbox.Services.System
             this.AuthConfig = new AuthConfig
             {
                 Sandbox = appConfig.Sandbox,
-                EnvrionmentPrefix = appConfig.EnvironmentPrefix,
-                Envrionment = appConfig.Environment,
+                EnvironmentPrefix = appConfig.EnvironmentPrefix,
+                Environment = appConfig.Environment,
                 UseCompactTicket = appConfig.UseFirstPartyToken
             };
         }
@@ -102,7 +102,7 @@ namespace Microsoft.Xbox.Services.System
 
             if (string.IsNullOrEmpty(result.Token))
             {
-                // todo: set presence
+                // TODO: set presence
             }
 
             this.UserSignedIn(result.XboxUserId, result.Gamertag, result.AgeGroup, result.Privileges, result.WebAccountId);
