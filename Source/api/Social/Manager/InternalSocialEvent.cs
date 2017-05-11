@@ -24,6 +24,13 @@ namespace Microsoft.Xbox.Services.Social.Manager
         public InternalSocialEvent(InternalSocialEventType eventType, IList<XboxSocialUser> usersAffected) : this(eventType)
         {
             this.UsersAffected = usersAffected;
+            IList<ulong> userList = new List<ulong>();
+            foreach (XboxSocialUser user in usersAffected)
+            {
+                userList.Add(user.XboxUserId);
+            }
+
+            this.UserIdsAffected = userList;
         }
 
         public InternalSocialEvent(InternalSocialEventType eventType, DevicePresenceChangeEventArgs devicePresenceArgs) : this(eventType)

@@ -74,6 +74,14 @@ namespace Microsoft.Xbox.Services.Social.Manager
             }
         }
 
+        public IList<XboxSocialUser> Users
+        {
+            get
+            {
+                return this.users.Values.ToList();
+            }
+        }
+
         public XboxSocialUser GetUser(ulong userId)
         {
             XboxSocialUser user;
@@ -193,8 +201,11 @@ namespace Microsoft.Xbox.Services.Social.Manager
                     case SocialEventType.UsersRemovedFromSocialGraph:
                         foreach (ulong userId in socialEvent.UsersAffected)
                         {
-                            XboxSocialUser user = users[userId];
-                            this.RemoveUser(user);
+                            XboxSocialUser user;
+                            if (this.users.TryGetValue(userId, out user))
+                            {
+                                this.RemoveUser(user);
+                            }
                         }
                         break;
                     default:

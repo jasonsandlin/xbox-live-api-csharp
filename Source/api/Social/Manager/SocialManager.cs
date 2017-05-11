@@ -66,6 +66,12 @@ namespace Microsoft.Xbox.Services.Social.Manager
             return graph.Initialize().ContinueWith(
                 initializeTask =>
                 {
+                    if (initializeTask.IsFaulted)
+                    {
+                        this.eventQueue.Enqueue(new SocialEvent(SocialEventType.LocalUserAdded, user, null, null, initializeTask.Exception));
+                        return;
+                    }
+
                     // Wait on the task to throw an exceptions.
                     initializeTask.Wait();
 
@@ -92,7 +98,7 @@ namespace Microsoft.Xbox.Services.Social.Manager
             }
         }
 
-        public XboxSocialUserGroup CreateSocialUserGroupFromFilters(XboxLiveUser user, PresenceFilter presenceFilter, RelationshipFilter relationshipFilter, uint titleId)
+        public XboxSocialUserGroup CreateSocialUserGroupFromFilters(XboxLiveUser user, PresenceFilter presenceFilter, RelationshipFilter relationshipFilter)
         {
             if (user == null) throw new ArgumentNullException("user");
 

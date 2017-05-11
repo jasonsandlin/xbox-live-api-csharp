@@ -52,9 +52,9 @@ namespace Microsoft.Xbox.Services.Social.Manager
             return group;
         }
 
-        public XboxSocialUserGroup CreateSocialUserGroupFromFilters(XboxLiveUser user, PresenceFilter presenceFilter, RelationshipFilter relationshipFilter, uint titleId)
+        public XboxSocialUserGroup CreateSocialUserGroupFromFilters(XboxLiveUser user, PresenceFilter presenceFilter, RelationshipFilter relationshipFilter)
         {
-            var group = new XboxSocialUserGroup(user, presenceFilter, relationshipFilter, titleId);
+            var group = new XboxSocialUserGroup(user, presenceFilter, relationshipFilter, XboxLiveAppConfiguration.Instance.TitleId);
 
             var users = Enumerable.Range(0, 5)
                 .Select(id =>
@@ -69,7 +69,7 @@ namespace Microsoft.Xbox.Services.Social.Manager
                             {
                                 new SocialManagerPresenceTitleRecord
                                 {
-                                    TitleId = titleId,
+                                    TitleId = XboxLiveAppConfiguration.Instance.TitleId,
                                     IsTitleActive = false,
                                 }
                             };

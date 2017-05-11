@@ -110,6 +110,14 @@ namespace Microsoft.Xbox.Services.Social.Manager
             }
         }
 
+        public void RemoveUsers(List<XboxSocialUser> users)
+        {
+            foreach (XboxSocialUser user in users)
+            {
+                this.Inactive.TryRemove(user);
+            }
+        }
+
         public void RemoveUsers(List<ulong> users)
         {
             foreach (ulong userId in users)

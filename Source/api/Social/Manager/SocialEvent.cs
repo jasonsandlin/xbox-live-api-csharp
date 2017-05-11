@@ -12,7 +12,7 @@ namespace Microsoft.Xbox.Services.Social.Manager
         {
             this.EventType = type;
             this.User = user;
-            this.UsersAffected = usersAffected;
+            this.UsersAffected = usersAffected == null ? new List<ulong>() : usersAffected;
             this.GroupAffected = groupAffected;
             this.Exception = exception;
         }

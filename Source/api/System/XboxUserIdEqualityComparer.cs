@@ -39,15 +39,23 @@ namespace Microsoft.Xbox.Services
     public sealed class XboxSocialUserIdEqualityComparer : IEqualityComparer<XboxSocialUser>
     {
         private static XboxSocialUserIdEqualityComparer instance;
+        private static readonly object instanceLock = new object();
 
         public static XboxSocialUserIdEqualityComparer Instance
         {
             get
             {
-                lock (instance)
+                if (instance == null)
                 {
-                    return instance ?? (instance = new XboxSocialUserIdEqualityComparer());
+                    lock (instanceLock)
+                    {
+                        if (instance == null)
+                        {
+                            instance = new XboxSocialUserIdEqualityComparer();
+                        }
+                    }
                 }
+                return instance;
             }
         }
 

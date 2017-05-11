@@ -20,6 +20,7 @@ namespace UWPIntegration
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
     using System.Threading.Tasks;
+    using Windows.UI.Xaml.Data;
 
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -29,6 +30,8 @@ namespace UWPIntegration
         private int jumps;
         private int headshots;
         private LeaderboardResult leaderboard;
+        private XboxSocialUserGroup xboxSocialUserGroupAll;
+        private XboxSocialUserGroup xboxSocialUserGroupAllOnline;
         private readonly XboxLiveUser user;
 
         public MainPage()
@@ -51,6 +54,32 @@ namespace UWPIntegration
             }
         }
 
+        public XboxSocialUserGroup XboxSocialUserGroupAll
+        {
+            get
+            {
+                return this.xboxSocialUserGroupAll;
+            }
+            set
+            {
+                this.xboxSocialUserGroupAll = value;
+                this.OnPropertyChanged();
+            }
+        }
+
+        public XboxSocialUserGroup XboxSocialUserGroupAllOnline
+        {
+            get
+            {
+                return this.xboxSocialUserGroupAllOnline;
+            }
+            set
+            {
+                this.xboxSocialUserGroupAllOnline = value;
+                this.OnPropertyChanged();
+            }
+        }
+
         public XboxLiveUser User
         {
             get { return this.user; }
@@ -60,6 +89,12 @@ namespace UWPIntegration
         {
             get { return XboxLive.Instance.StatsManager; }
         }
+
+        public ISocialManager SocialManager
+        {
+            get { return XboxLive.Instance.SocialManager; }
+        }
+
         private async void SignInSilentButton_Click(object sender, RoutedEventArgs e)
         {
             var signInResult = await this.User.SignInSilentlyAsync();
@@ -70,6 +105,7 @@ namespace UWPIntegration
                 {
                     this.OnPropertyChanged("User");
                     this.StatsManager.AddLocalUser(this.User);
+                    this.SocialManager.AddLocalUser(this.User);
                 }
             });
         }
@@ -84,6 +120,7 @@ namespace UWPIntegration
                 {
                     this.OnPropertyChanged("User");
                     this.StatsManager.AddLocalUser(this.User);
+                    this.SocialManager.AddLocalUser(this.User);
                 }
             });
         }
@@ -136,7 +173,6 @@ namespace UWPIntegration
 
             var result = await this.User.Services.PrivacyService.CheckPermissionWithTargetUserAsync(PermissionIdConstants.ViewTargetVideoHistory, "2814680291986301");
         }
-
         private async void CheckMultiplePermissions_Click(object sender, RoutedEventArgs e)
         {
             if (!this.User.IsSignedIn) return;
@@ -168,6 +204,25 @@ namespace UWPIntegration
             }
         }
 
+        private void createSocialUserGroupAllButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!this.User.IsSignedIn) return;
+            this.XboxSocialUserGroupAll = this.SocialManager.CreateSocialUserGroupFromFilters(this.User, PresenceFilter.All, RelationshipFilter.Friends);
+        }
+
+        private void createSocialUserGroupAllOnlineButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!this.User.IsSignedIn) return;
+            this.XboxSocialUserGroupAllOnline = this.SocialManager.CreateSocialUserGroupFromFilters(this.User, PresenceFilter.AllOnline, RelationshipFilter.Friends);
+        }
+
+        private void RefreshSocialGroups()
+        {
+            this.XboxSocialUserGroupAll = this.XboxSocialUserGroupAll;
+            this.XboxSocialUserGroupAllOnline = this.XboxSocialUserGroupAllOnline;
+        }
+
+
         async void DoWork()
         {
             while (true)
@@ -175,10 +230,11 @@ namespace UWPIntegration
                 if (this.User.IsSignedIn)
                 {
                     // Perform the long running do work task on a background thread.
-                    var doWorkTask = Task.Run(() => { return this.StatsManager.DoWork(); });
+                    var statsDoWorkTask = Task.Run(() => { return this.StatsManager.DoWork(); });
+                    var socialDoWorkTask = Task.Run(() => { return this.SocialManager.DoWork(); });
 
-                    List<StatEvent> events = await doWorkTask;
-                    foreach (StatEvent ev in events)
+                    List<StatEvent> statsEvents = await statsDoWorkTask;
+                    foreach (StatEvent ev in statsEvents)
                     {
                         if (ev.EventType == StatEventType.GetLeaderboardComplete)
                         {
@@ -204,6 +260,12 @@ namespace UWPIntegration
                             }
                         }
                         this.StatsData.Text = string.Join(Environment.NewLine, statNames.Select(n => this.StatsManager.GetStat(this.User, n)).Select(s => $"{s.Name} ({s.Type}) = {s.Value}"));
+                    }
+
+                    IList<SocialEvent> socialEvents = await socialDoWorkTask;
+                    foreach (SocialEvent ev in socialEvents)
+                    {
+                        RefreshSocialGroups();
                     }
                 }
 

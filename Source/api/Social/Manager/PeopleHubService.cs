@@ -62,6 +62,11 @@ namespace Microsoft.Xbox.Services.Social.Manager
             return request.GetResponseWithAuth(user)
                 .ContinueWith(responseTask =>
                 {
+                    if (responseTask.IsFaulted)
+                    {
+                        throw new XboxException("PeopleHub call failed with " + responseTask.Exception);
+                    }
+
                     var response = responseTask.Result;
 
                     if (response.HttpStatus != 200)
