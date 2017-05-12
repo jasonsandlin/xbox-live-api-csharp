@@ -96,7 +96,7 @@ namespace Microsoft.Xbox.Services.UnitTests.Social
         [TestMethod]
         public void CreateSocialGroupWithFilterOnlineFriendsFromSocialManager()
         {
-            var group = SocialManager.Instance.CreateSocialUserGroupFromFilters(this.user, PresenceFilter.AllOnline, RelationshipFilter.Friends, 0);
+            var group = SocialManager.Instance.CreateSocialUserGroupFromFilters(this.user, PresenceFilter.AllOnline, RelationshipFilter.Friends);
             Assert.IsNotNull(group);
 
             DoWorkUntil(() => group.Count > 0);
@@ -107,7 +107,7 @@ namespace Microsoft.Xbox.Services.UnitTests.Social
         [TestMethod]
         public void CreateSocialGroupWithFilterOnlineFavoritesFromSocialManager()
         {
-            var group = SocialManager.Instance.CreateSocialUserGroupFromFilters(this.user, PresenceFilter.AllOnline, RelationshipFilter.Favorite, 0);
+            var group = SocialManager.Instance.CreateSocialUserGroupFromFilters(this.user, PresenceFilter.AllOnline, RelationshipFilter.Favorite);
             Assert.IsNotNull(group);
 
             DoWorkUntil(() => group.Count > 0);
@@ -118,7 +118,7 @@ namespace Microsoft.Xbox.Services.UnitTests.Social
         [TestMethod]
         public void CreateSocialGroupWithFilterOfflineFavoritesFromSocialManager()
         {
-            var group = SocialManager.Instance.CreateSocialUserGroupFromFilters(this.user, PresenceFilter.AllOffline, RelationshipFilter.Favorite, 0);
+            var group = SocialManager.Instance.CreateSocialUserGroupFromFilters(this.user, PresenceFilter.AllOffline, RelationshipFilter.Favorite);
             Assert.IsNotNull(group);
 
             DoWorkUntil(() => group.Count > 0);
