@@ -4,7 +4,7 @@
 namespace Microsoft.Xbox.Services.UnitTests.Stats
 {
     using Microsoft.VisualStudio.TestTools.UnitTesting;
-    using Microsoft.Xbox.Services.Stats.Manager;
+    using Microsoft.Xbox.Services.Statistics.Manager;
 
     [TestClass]
     public class StatsManagerTests : TestBase

@@ -6,7 +6,7 @@ namespace Microsoft.Xbox.Services
     using global::System;
     using global::System.IO;
     using Microsoft.Xbox.Services.Social.Manager;
-    using Microsoft.Xbox.Services.Stats.Manager;
+    using Microsoft.Xbox.Services.Statistics.Manager;
 
     public partial class XboxLive : IDisposable
     {
@@ -74,7 +74,7 @@ namespace Microsoft.Xbox.Services
             {
                 if (Instance.statsManager == null)
                 {
-                    Instance.statsManager = Stats.Manager.StatsManager.Instance;
+                    Instance.statsManager = Statistics.Manager.StatsManager.Instance;
                 }
                 return Instance.statsManager;
             }

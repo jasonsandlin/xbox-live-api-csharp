@@ -7,7 +7,7 @@ using Microsoft.Xbox.Services.System;
 using Microsoft.Xbox.Services.Leaderboard;
 using global::System.Threading.Tasks;
 
-namespace Microsoft.Xbox.Services.Stats.Manager
+namespace Microsoft.Xbox.Services.Statistics.Manager
 {
     public interface IStatsManager
     {
