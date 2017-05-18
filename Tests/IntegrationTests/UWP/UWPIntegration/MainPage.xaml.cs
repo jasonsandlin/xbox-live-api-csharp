@@ -32,6 +32,7 @@ namespace UWPIntegration
         private LeaderboardResult leaderboard;
         private XboxSocialUserGroup xboxSocialUserGroupAll;
         private XboxSocialUserGroup xboxSocialUserGroupAllOnline;
+        private XboxSocialUserGroup xboxSocialUserGroupFromList;
         private readonly XboxLiveUser user;
 
         public MainPage()
@@ -76,6 +77,19 @@ namespace UWPIntegration
             set
             {
                 this.xboxSocialUserGroupAllOnline = value;
+                this.OnPropertyChanged();
+            }
+        }
+
+        public XboxSocialUserGroup XboxSocialUserGroupFromList
+        {
+            get
+            {
+                return this.xboxSocialUserGroupFromList;
+            }
+            set
+            {
+                this.xboxSocialUserGroupFromList = value;
                 this.OnPropertyChanged();
             }
         }
@@ -216,10 +230,24 @@ namespace UWPIntegration
             this.XboxSocialUserGroupAllOnline = this.SocialManager.CreateSocialUserGroupFromFilters(this.User, PresenceFilter.AllOnline, RelationshipFilter.Friends);
         }
 
+        private void createSocialUserGroupFromListButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (!this.User.IsSignedIn) return;
+
+            List<ulong> userIds = new List<ulong>();
+            foreach (XboxSocialUser user in XboxSocialUserGroupAll.Users)
+            {
+                userIds.Add(user.XboxUserId);
+            }
+
+            this.XboxSocialUserGroupFromList = this.SocialManager.CreateSocialUserGroupFromList(this.User, userIds);
+        }
+
         private void RefreshSocialGroups()
         {
             this.XboxSocialUserGroupAll = this.XboxSocialUserGroupAll;
             this.XboxSocialUserGroupAllOnline = this.XboxSocialUserGroupAllOnline;
+            this.XboxSocialUserGroupFromList = this.XboxSocialUserGroupFromList;
         }
 
 
