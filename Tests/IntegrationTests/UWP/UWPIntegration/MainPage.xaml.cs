@@ -15,12 +15,13 @@ namespace UWPIntegration
     using Microsoft.Xbox.Services.Privacy;
     using Microsoft.Xbox.Services.Leaderboard;
     using Microsoft.Xbox.Services.Social.Manager;
-    using Microsoft.Xbox.Services.Stats.Manager;
+    using Microsoft.Xbox.Services.Statistics.Manager;
     using System.Collections.Generic;
     using System.ComponentModel;
     using System.Runtime.CompilerServices;
     using System.Threading.Tasks;
     using Windows.UI.Xaml.Data;
+    using System.Diagnostics;
 
     /// <summary>
     /// An empty page that can be used on its own or navigated to within a Frame.
@@ -259,8 +260,6 @@ namespace UWPIntegration
                 {
                     // Perform the long running do work task on a background thread.
                     var statsDoWorkTask = Task.Run(() => { return this.StatsManager.DoWork(); });
-                    var socialDoWorkTask = Task.Run(() => { return this.SocialManager.DoWork(); });
-
                     List<StatEvent> statsEvents = await statsDoWorkTask;
                     foreach (StatEvent ev in statsEvents)
                     {
@@ -290,9 +289,13 @@ namespace UWPIntegration
                         this.StatsData.Text = string.Join(Environment.NewLine, statNames.Select(n => this.StatsManager.GetStat(this.User, n)).Select(s => $"{s.Name} ({s.Type}) = {s.Value}"));
                     }
 
+                    var socialDoWorkTask = Task.Run(() => { return this.SocialManager.DoWork(); });
                     IList<SocialEvent> socialEvents = await socialDoWorkTask;
                     foreach (SocialEvent ev in socialEvents)
                     {
+                        string msg;
+                        msg = "SocialEvent: " + ev.EventType.ToString();
+                        Debug.WriteLine(msg);
                         RefreshSocialGroups();
                     }
                 }

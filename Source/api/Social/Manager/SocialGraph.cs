@@ -596,8 +596,10 @@ namespace Microsoft.Xbox.Services.Social.Manager
 
                 if (eventUser != null)
                 {
-                    if  (eventUser.PresenceState != presenceState ||
-                        (eventUser.PresenceDetails != null && presenceDetails != null && eventUser.PresenceDetails.All(record => presenceDetails.Contains(record))))
+                    if  ((eventUser.PresenceState != presenceState) ||
+                        (eventUser.PresenceDetails != null && presenceDetails != null &&
+                         eventUser.PresenceDetails.Count > 0 && presenceDetails.Count > 0 && 
+                         eventUser.PresenceDetails.All(record => presenceDetails.Contains(record))))
                     {
                         eventUser.PresenceDetails = presenceDetails;
                         eventUser.PresenceState = presenceState;

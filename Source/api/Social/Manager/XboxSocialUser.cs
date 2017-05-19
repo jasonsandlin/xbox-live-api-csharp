@@ -70,8 +70,10 @@ namespace Microsoft.Xbox.Services.Social.Manager
                 changeType |= ChangeListType.SocialRelationshipChange;
             }
 
-            if (this.PresenceState != other.PresenceState ||
-                (this.PresenceDetails != null && other.PresenceDetails != null && this.PresenceDetails.All(record => other.PresenceDetails.Contains(record))))
+            if ((this.PresenceState != other.PresenceState) ||
+                (this.PresenceDetails != null && other.PresenceDetails != null &&
+                 this.PresenceDetails.Count > 0 && other.PresenceDetails.Count > 0 &&
+                 this.PresenceDetails.All(record => other.PresenceDetails.Contains(record))))
             {
                 changeType |= ChangeListType.PresenceChange;
             }

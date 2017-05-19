@@ -63,32 +63,26 @@ namespace Microsoft.Xbox.Services.Social.Manager
 
                     switch (presenceFilter)
                     {
-                        case PresenceFilter.TitleOnline:
-                            groupUser.PresenceState = UserPresenceState.Online;
-                            groupUser.PresenceDetails = new List<SocialManagerPresenceTitleRecord>
-                            {
-                                new SocialManagerPresenceTitleRecord
-                                {
-                                    TitleId = XboxLiveAppConfiguration.Instance.TitleId,
-                                    IsTitleActive = false,
-                                }
-                            };
-                            break;
-                        case PresenceFilter.TitleOffline:
-                            groupUser.PresenceState = UserPresenceState.Offline;
-                            groupUser.TitleHistory = new TitleHistory
-                            {
-                                HasUserPlayed = true,
-                                LastTimeUserPlayed = DateTime.UtcNow.AddDays(-1),
-                            };
-                            break;
                         case PresenceFilter.AllOnline:
-                            groupUser.PresenceState = UserPresenceState.Online;
+                        case PresenceFilter.TitleOnline:
+                            InitUserForOnlinePresence(ref groupUser);
                             break;
+
                         case PresenceFilter.AllOffline:
-                            groupUser.PresenceState = UserPresenceState.Offline;
+                        case PresenceFilter.TitleOffline:
+                            InitUserForOfflinePresence(ref groupUser);
                             break;
+                        
                         case PresenceFilter.AllTitle:
+                        case PresenceFilter.All:
+                            if (id % 2 == 0)
+                            {
+                                InitUserForOnlinePresence(ref groupUser);
+                            }
+                            else
+                            {
+                                InitUserForOfflinePresence(ref groupUser);
+                            }
                             break;
                     }
 
@@ -111,6 +105,29 @@ namespace Microsoft.Xbox.Services.Social.Manager
             this.events.Add(new SocialEvent(SocialEventType.SocialUserGroupLoaded, user, null, group));
 
             return group;
+        }
+
+        private void InitUserForOfflinePresence(ref XboxSocialUser groupUser)
+        {
+            groupUser.PresenceState = UserPresenceState.Offline;
+            groupUser.TitleHistory = new TitleHistory
+            {
+                HasUserPlayed = true,
+                LastTimeUserPlayed = DateTime.UtcNow.AddDays(-1),
+            };
+        }
+
+        private void InitUserForOnlinePresence(ref XboxSocialUser groupUser)
+        {
+            groupUser.PresenceState = UserPresenceState.Online;
+            groupUser.PresenceDetails = new List<SocialManagerPresenceTitleRecord>
+            {
+                new SocialManagerPresenceTitleRecord
+                {
+                    TitleId = XboxLiveAppConfiguration.Instance.TitleId,
+                    IsTitleActive = true,
+                }
+            };
         }
 
         public IList<SocialEvent> DoWork()
