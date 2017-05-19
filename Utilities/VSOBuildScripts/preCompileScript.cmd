@@ -1,9 +1,6 @@
 echo Running preCompileScript.cmd
 
-set TFS_SourcesDirectory=C:\git\forks\xup\External\xbox-live-api-csharp
-set TFS_VersionNumber=2012.1020
 call %TFS_SourcesDirectory%\Utilities\VSOBuildScripts\setBuildVersion.cmd
-pause
 for /f "tokens=2 delims==" %%G in ('wmic os get localdatetime /value') do set datetime=%%G
 
 set DATETIME_YEAR=%datetime:~0,4%
