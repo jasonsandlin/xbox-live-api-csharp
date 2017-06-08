@@ -9,7 +9,7 @@ https://developer.microsoft.com/en-us/games/xbox/docs/xboxlive/get-started/devel
 
 This repo is no longer active and will be deleted after 9/2017.
 
-Both the C# interop source and Unity plug-in are in active development right now.  To make it easy for developers to get the latest code and avoid double pull requests due using submodules, we have moved our C# interop source to [Xbox Live Unity Plugin](https://github.com/Microsoft/xbox-live-unity-plugin) and will be maintaining it there.
+Both the C# interop source and Unity plug-in are in active development right now.  To make it easy for developers to get the latest code and avoid double pull requests due to submodules, we have moved our C# interop source to [Xbox Live Unity Plugin](https://github.com/Microsoft/xbox-live-unity-plugin) and will be maintaining it there.
 
 ### Xbox Live GitHub projects
 *   [Xbox Live Service API for C++](https://github.com/Microsoft/xbox-live-api)
